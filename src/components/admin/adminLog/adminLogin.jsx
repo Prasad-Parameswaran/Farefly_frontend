@@ -1,18 +1,24 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { adminLG } from '../../../redux/slices/adminSlice'
+import { adminLogin } from '../../../apiConfig/axiosConfig/axiosAdminConfig';
+//import { adminLogin } from '../../../apiConfig/axiosConfig/axiosAdminConfig'
+
 
 export default function AdminLogin() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
+    const dispatch = useDispatch()
 
     const validateForm = () => {
         const newErrors = {};
 
-        if (email.trim() === '' || !email.includes('@')) {
+        if (email.trim() === '' && !email.includes('@')) {
             newErrors.email = 'Valid email is required';
         }
 
@@ -26,33 +32,38 @@ export default function AdminLogin() {
     };
 
     const handleSubmit = async (e) => {
+        //e.preventDefault()
         e.preventDefault();
+
+
         if (validateForm()) {
             const admin = {
                 email,
                 password,
             };
+            await adminLogin(admin).then((response) => {
+                console.log("oooooooooooooooooooo")
+                if (response.data.success) {
+                    localStorage.setItem('adminToken', response.data.adminToken)
+                    dispatch(adminLG(response.data.adminToken))
+                    toast.success('Welcome back')
+                    navigate('/admin/admindash')
 
-            try {
-                await axios.post('http://localhost:4000/admin/adminLog', { admin }).then((response) => {
-                    if (response.data.success) {
-                        navigate('/')
-                    } else {
-                        toast.error(response.data.message)
-                    }
 
-                })
+                } else {
+                    toast.error(`${response.data.message}`)
+                }
 
-            } catch (error) {
+            })
 
-                console.error('Error:', error.message);
-            }
-
-            console.log('Form is valid. Ready to submit!');
-        } else {
+        }
+        else {
             console.log('Form is not valid. Please fix the errors.');
         }
-    };
+    }
+
+
+
 
 
     return (
@@ -85,8 +96,8 @@ export default function AdminLogin() {
                         <p className='flex items-center  hover:text-blue-400'><input className='mr-2' type="checkbox" />Remember me</p>
                         <a href="" className=' hover:text-blue-400'> Forgot password</a>
                     </div>
-                    <button className='w-full my-5 py-2 bg-blue-700 shadow-lg hover:bg-blue-800   text-white font-semibold rounded-lg border border-white'>SIGN IN</button>
-                    <Toaster />
+                    <button onClick={handleSubmit} className='w-full my-5 py-2 bg-blue-700 shadow-lg hover:bg-blue-800   text-white font-semibold rounded-lg border border-white' > SIGN IN</button>
+                    {/*<Toaster />*/}
                 </form >
 
             </div >

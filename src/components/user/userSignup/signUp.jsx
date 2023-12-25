@@ -159,7 +159,7 @@ const SignUp = () => {
                     <button className='w-full my-5 py-2 bg-teal-500 shadow-lg shadow-teal-50/40 hover:shadow-teal-20 text-white font-semibold rounded-lg' onClick={handleSubmit}>SIGN UP</button>
                     <Toaster />
                     <div className='flex justify-center text-gray-400'>
-                        <a href=""> SIGN IN</a>
+                        <a onClick={() => { navigate('/login') }}> SIGN IN</a>
                     </div>
                 </form >
             </div >

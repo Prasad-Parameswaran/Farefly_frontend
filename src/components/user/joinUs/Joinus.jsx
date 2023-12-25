@@ -1,6 +1,17 @@
 import React, { useRef, useState } from 'react';
-import { partnerSignup } from '../../../apiConfig/axiosConfig'
+import { partnerSignup } from '../../../apiConfig/axiosConfig/axiosClientConfig'
+import axios from 'axios';
+import toast from 'react-hot-toast';
+
+
+
 export default function MyForm() {
+    const upload_preset = 'vytol9u4'
+    const cloud_name = 'djbokpgy8'
+    //const [refrsh, setRefresh] = useState(true)
+    const [panCard, setPanCard] = useState()
+    const [adhar, setAdhar] = useState()
+    const fileInputRef = useRef(null);
     const [validation, setValidation] = useState({
         name: true,
         email: true,
@@ -23,9 +34,50 @@ export default function MyForm() {
         localArea: React.createRef(),
     });
 
+    const panCardhandleFile = async (event) => {
+        try {
+            console.log("jjjjjjjjjjjj");
+            const file = event.target.files[0]
+            const formData = new FormData()
+            formData.append('file', file)
+            formData.append('upload_preset', upload_preset)
+            const response = await axios.post(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`, formData)
+            if (response?.data?.secure_url) {
+                const data = response.data.secure_url
+                console.log(data, "this is pan card image data");
+
+                setPanCard(data)
+            }
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
+    const adharHandleFile = async (event) => {
+        try {
+            console.log("jjjjjjjjjjjj");
+            const file = event.target.files[0]
+            const formData = new FormData()
+            formData.append('file', file)
+            formData.append('upload_preset', upload_preset)
+            const response = await axios.post(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`, formData)
+            if (response?.data?.secure_url) {
+                const data = response.data.secure_url
+                console.log(data, "this is ahar card image data");
+                setAdhar(data)
+            }
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
+
+
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        console.log(formRef.current.age.current.value, "this is age");
         const formData = {
             name: formRef.current.name.current.value,
             email: formRef.current.email.current.value,
@@ -35,12 +87,17 @@ export default function MyForm() {
             conformPassword: formRef.current.conformPassword.current.value,
             age: formRef.current.age.current.value,
             localArea: formRef.current.localArea.current.value,
+            aadhaar: adhar,
+            panCard: panCard
         };
 
         // Validate form fields
         const newValidation = {};
         Object.keys(formData).forEach((key) => {
-            newValidation[key] = formData[key].trim() !== '';
+            if (!key === 'aadhaar' && !key === 'panCard') {
+                newValidation[key] = formData[key].trim() !== '';
+            }
+
         });
         setValidation(newValidation);
 
@@ -48,7 +105,6 @@ export default function MyForm() {
 
             if (!formData.email.includes('@')) {
                 console.log(formData.phone.length, "hhhhhhhhhhhh");
-                alert('email is not correct ....')
 
             } else if (formData.phone.length != 10) {
                 alert('phone is not correct 1 to 10....')
@@ -59,22 +115,27 @@ export default function MyForm() {
 
             } else {
 
-                await partnerSignup(formData).then((res) => {
-                    console.log(res.data, "jjjjjjjjjjj succeffully added");
-                })
+                const response = await partnerSignup(formData)
+                console.log(response);
+                if (response?.data?.succes) {
+                    toast.success(`${response.data.message}`)
+                } else {
+                    toast.error(`${response.data.message}`)
+                }
+
 
             }
         }
     };
 
     return (
-        <div className='bg-slate-900 text-white flex flex-col  justify-center items-center w-full h-screen gap-y-6'>
-            <div className='w-full h-11 text-center font-bold text-3xl '>JOIN Farefly...  </div>
+        <div className='bg-slate-500 text-white flex flex-col  justify-center items-center w-full h-screen gap-y-6'>
+            <div className='w-full h-11 text-center font-bold text-3xl '>JOIN US NOW...  </div>
             <div className='w-full  flex  flex-col items-center justify-center'>
 
                 <form onSubmit={handleSubmit} className='w-1/2 p-3 border rounded-lg shadow-md shadow-white  '>
-                    <div className='flex w-full'>
-                        <div className='w-1/2 h-full'>
+                    <div className='md:flex w-full'>
+                        <div className='md:w-1/2 h-full'>
                             <div className='w-full h-20 p-3'>
                                 <h1>Name</h1>
                                 <input
@@ -99,8 +160,13 @@ export default function MyForm() {
                                 <input className={`border w-full h-2/3 rounded-lg px-3 text-black ${!validation.district && 'border-red-500 border-2'}`}
                                     ref={formRef.current.district} type="text" />
                             </div>
+                            <div className='w-full h-20 p-3'>
+                                <h1>PAN Card Image upload</h1>
+                                <input className={`border w-full h-2/3 rounded-lg px-3 text-black`}
+                                    ref={formRef.current.age} onChange={panCardhandleFile} type="file" name='image' />
+                            </div>
                         </div>
-                        <div className='w-1/2 h-full'>
+                        <div className='md:w-1/2 h-full'>
                             <div className='w-full h-20 p-3 '>
                                 <h1>Password</h1>
                                 <input className={`border w-full h-2/3 rounded-lg px-3 text-black ${!validation.password && 'border-red-500 border-2'}`}
@@ -120,6 +186,11 @@ export default function MyForm() {
                                 <h1>Age</h1>
                                 <input className={`border w-full h-2/3 rounded-lg px-3 text-black ${!validation.age && 'border-red-500 border-2'}`}
                                     ref={formRef.current.age} type="number" />
+                            </div>
+                            <div className='w-full h-20 p-3'>
+                                <h1>Adhar Image upload</h1>
+                                <input className={` w-full h-2/3 rounded-lg px-3 text-black border `}
+                                    onChange={adharHandleFile} type="file" name='image' />
                             </div>
                         </div>
 
@@ -151,7 +222,6 @@ export default function MyForm() {
                             </svg>
                             REGISTER NOW
                         </button>
-
 
                     </div>
                 </form>
