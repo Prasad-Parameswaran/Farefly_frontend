@@ -7,6 +7,12 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { UserLG } from '../../../redux/slices/userSlice';
 import OtpInput from "react18-input-otp";
+import LogInButton from './loginButton';
+import { gapi } from 'gapi-script';
+import LogOutButton from './logOutButton';
+
+const client = '206906884823-mbu9f6qhm15tr239h09epl6ap7g137hb.apps.googleusercontent.com'
+
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -15,6 +21,8 @@ function Login() {
     const dispatch = useDispatch()
     const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
+    const storedValue = localStorage.getItem('key');
+
 
     const [code, setCode] = useState("");
     const [arrayVal, setArrayVal] = useState(false)
@@ -22,6 +30,8 @@ function Login() {
 
     const [blur, setBlur] = useState(false)
     const [forgot, setForgot] = useState(false)
+    const [jwtauth, setJwtAuth] = useState(false)
+
 
 
     const validateForm = () => {
@@ -56,7 +66,7 @@ function Login() {
                     localStorage.setItem('Token', response.data.partnerToken);
                     dispatch(UserLG(response.data.partnerToken))
                     toast.success(`${response.data.message}`)
-                    navigate('/');
+                    //navigate('/');
                 } else {
                     toast.error(response.data.message);
                 }
@@ -74,7 +84,6 @@ function Login() {
         const email = {
             email: e.target.email.value
         }
-        console.log('akath ethi iniyendhuvenam...................')
         const response = await forgotPass(email)
         if (response.data.succes) {
             setShowModal(false)
@@ -169,16 +178,20 @@ function Login() {
                         >
                             SIGN IN
                         </button>
+                        <div className='w-full my-5 py-2'>
+
+                            <LogInButton />
+                        </div>
 
                         <Toaster />
-                        <div className='flex justify-around text-blue-600 font-thin  '>
-                            <div className='cursor-pointer' onClick={() => navigate(' /signup')}>Signup </div>
-                            <div className='cursor-pointer' onClick={() => navigate('/partner/partnerlogin')}>Partner signin</div>
+                        <div className='flex justify-around text-white font-thin  '>
+                            <div className='cursor-pointer' onClick={() => navigate('/signup')}>Signup </div>
+                            {/*<div className='cursor-pointer' onClick={() => navigate('/partner/partnerlogin')}>Partner signin</div>*/}
+                            <div className='cursor-pointer'>
+                                <a onClick={() => setShowModal(true)} className='p-3 font-thin text-white cursor-pointer ' >Forgot password</a>
+                            </div>
+                        </div>
 
-                        </div>
-                        <div className='flex justify-center'>
-                            <a onClick={() => setShowModal(true)} className='p-3 font-thin text-blue-600 cursor-pointer ' >Forgot password</a>
-                        </div>
                     </form >
                 </div >
 

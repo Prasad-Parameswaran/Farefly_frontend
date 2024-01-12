@@ -29,12 +29,9 @@ function UserProfile() {
             formData.append('upload_preset', upload_preset)
             const response = await axios.post(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`, formData)
             if (response?.data?.secure_url) {
-                console.log(response.data.secure_url, '000000000000000000000000');
                 setFront(response.data.secure_url)
                 const data = response.data.secure_url
-                //await postProfileImage(data).then((res) => {
-                //    console.log(res, "data");
-                //})
+
             }
         }
         catch (error) {
@@ -44,21 +41,17 @@ function UserProfile() {
 
     const handleProfile = async (event) => {
         try {
-            console.log('ibide ethiyittund');
             const file = event.target.files[0]
             const formData = new FormData()
             formData.append('file', file)
             formData.append('upload_preset', upload_preset)
             const response = await axios.post(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`, formData)
             if (response?.data?.secure_url) {
-                console.log(response.data.secure_url, '12345');
                 setProfileImage(response.data.secure_url)
                 const data = response.data.secure_url
                 refrsh ? setRefresh(false) : setRefresh(true)
 
-                //await postProfileImage(data).then((res) => {
-                //    console.log(res, "data");
-                //})
+
             }
         }
         catch (error) {
@@ -67,7 +60,6 @@ function UserProfile() {
     }
     const handleback = async (event) => {
         try {
-            console.log('lisense backside');
 
             const file = event.target.files[0]
             const formData = new FormData()
@@ -75,12 +67,9 @@ function UserProfile() {
             formData.append('upload_preset', upload_preset)
             const response = await axios.post(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`, formData)
             if (response?.data?.secure_url) {
-                console.log(response.data.secure_url, "this is my license backside url ");
                 setBack(response.data.secure_url)
                 const data = response.data.secure_url
-                //await postProfileImage(data).then((res) => {
-                //    console.log(res, "data")
-                //})
+
             } else {
                 console.log(response, "this is my license backside url ");
 
@@ -101,7 +90,6 @@ function UserProfile() {
         formDataObject.licenceFront = front;
         formDataObject.licenceBack = back;
         formDataObject.profileImage = profileImage;
-        console.log(formDataObject, 'this is my form all details ');
 
         const response = await addProfile(formDataObject)
         if (response.data.success) {

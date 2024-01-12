@@ -7,7 +7,6 @@ const admin = adminAxiosIntercepter(url);
 const adminLogin = async (data) => {
 
     try {
-        console.log(admin, "jjjjjjjjjjjjjjjjjjj");
         const response = await admin.post('/adminLogin', { data })
         return response
     } catch (error) {
@@ -116,6 +115,66 @@ const ListOrUnlist = async (id) => {
     }
 
 }
+
+
+const couponSubmit = async (data) => {
+
+    try {
+        console.log(admin, "jjjjjjjjjjjjjjjjjjj");
+        const response = await admin.post('/addCoupon', { data })
+        return response
+    } catch (error) {
+        console.log(error.message);
+    }
+
+}
+const allCouponDetails = async () => {
+    try {
+        const response = await admin.get('/allCouponDetails')
+        return response
+    } catch (error) {
+        console.log(error.message)
+    }
+
+}
+const BlockOrUnblock = async (id) => {
+    try {
+        const response = await admin.get(`/BlockOrUnblock?id=${id}`)
+        return response
+    } catch (error) {
+        console.log(error.message)
+    }
+
+}
+const bookings = async () => {
+    try {
+        const response = await admin.get('/bookingList');
+        return response;
+    } catch (error) {
+        console.log('error occurred', error)
+    }
+}
+const adminChartbooking = async () => {
+    try {
+        const response = await admin.get('/adminChartbooking');
+        return response;
+    } catch (error) {
+        console.log('error occurred', error)
+    }
+}
+
+const Sales = async (page) => {
+    try {
+        const response = await admin.get(`/adminsales?page=${page}`)
+        return response
+    } catch (error) {
+        console.log(error, "error from stataus change");
+
+    }
+}
+
+
+
 export {
     userList,
     partnerList,
@@ -127,5 +186,11 @@ export {
     partnerView,
     carDatas,
     carDetails,
-    ListOrUnlist
+    ListOrUnlist,
+    couponSubmit,
+    allCouponDetails,
+    BlockOrUnblock,
+    bookings,
+    adminChartbooking,
+    Sales
 };

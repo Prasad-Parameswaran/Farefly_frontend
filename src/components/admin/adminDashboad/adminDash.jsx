@@ -6,6 +6,10 @@ import { adminLO } from '../../../redux/slices/adminSlice'
 import PartnerUnvarified from '../tables/partnerUnvarified'
 import { useDispatch } from 'react-redux'
 import CarList from '../tables/carList'
+import Coupon from '../tables/coupon'
+import Booking from '../tables/bookingList'
+import AdminChart from '../tables/adminChart'
+import AdminSales from '../tables/adminSalesReport'
 
 function AdminDash() {
 
@@ -43,6 +47,12 @@ function AdminDash() {
             case 'userRequest':
                 setPage('userRequest')
                 break;
+            case 'Coupon':
+                setPage('Coupon')
+                break;
+            case 'AdminSale':
+                setPage('AdminSale')
+                break;
         }
     }
 
@@ -68,16 +78,21 @@ function AdminDash() {
                         <li className={page == "cars" ? "w-full h-10 bg-gray-300 flex justify-center items-center  text-black cursor-pointer" : "w-full h-10 hover:bg-gray-300 flex justify-center items-center text-blue-300  hover:text-black cursor-pointer"}>
                             <a onClick={() => { handleclick('cars') }} >Cars</a>
                         </li>
-                        <li className={page == "booking" ? "w-full h-10 bg-gray-300 flex justify-center items-center  text-black cursor-pointer" : "w-full h-10 hover:bg-gray-300 flex justify-center items-center text-blue-300  hover:text-black cursor-pointer"}>
-                            <a onClick={() => { handleclick('booking') }} >Booking</a>
-                        </li>
+
                         <li className={page == "partnerRequest" ? "w-full h-10 bg-gray-300 flex justify-center items-center  text-black cursor-pointer" : "w-full h-10 hover:bg-gray-300 flex justify-center items-center text-blue-300  hover:text-black cursor-pointer"}>
                             <a onClick={() => { handleclick('partnerRequest') }} >Patner Request</a>
                         </li>
-                        {/*<li className={page == "dashboad" ? "w-full h-10 bg-gray-300 flex justify-center items-center  text-black cursor-pointer" : "w-full h-10 hover:bg-gray-300 flex justify-center items-center text-blue-300  hover:text-black cursor-pointer"}>*/}
+                        <li className={page == "Coupon" ? "w-full h-10 bg-gray-300 flex justify-center items-center  text-black cursor-pointer" : "w-full h-10 hover:bg-gray-300 flex justify-center items-center text-blue-300  hover:text-black cursor-pointer"}>
 
-                        {/*<a onClick={() => { handleclick('userRequest') }} > Users Request</a>*/}
-                        {/*</li>*/}
+                            <a onClick={() => { handleclick('Coupon') }} > Coupons</a>
+                        </li>
+                        <li className={page == "booking" ? "w-full h-10 bg-gray-300 flex justify-center items-center  text-black cursor-pointer" : "w-full h-10 hover:bg-gray-300 flex justify-center items-center text-blue-300  hover:text-black cursor-pointer"}>
+                            <a onClick={() => { handleclick('booking') }} >Booking</a>
+                        </li>
+                        <li className={page == "booking" ? "w-full h-10 bg-gray-300 flex justify-center items-center  text-black cursor-pointer" : "w-full h-10 hover:bg-gray-300 flex justify-center items-center text-blue-300  hover:text-black cursor-pointer"}>
+                            <a onClick={() => { handleclick('AdminSale') }} >Sale Report</a>
+                        </li>
+
                     </ul>
                 </div>
                 <div className="hidden lg:block">
@@ -96,11 +111,11 @@ function AdminDash() {
                 </nav >
 
                 {/* Content Area */}
-                < div className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-400 p-4" >
+                < div className="flex-1 overflow-x-hidden overflow-y-auto bg-white p-4" >
                     <div className="container mx-auto mt-4">
                         <div>
                             {
-                                page === 'dashboad' ? <h1>dashboard</h1> : null
+                                page === 'dashboad' ? <AdminChart /> : null
                             }
                             {
                                 page === 'user' ? <UserLists /> : null
@@ -112,7 +127,7 @@ function AdminDash() {
                                 page === 'cars' ? <CarList /> : null
                             }
                             {
-                                page === 'booking' ? <h1>booking</h1> : null
+                                page === 'booking' ? <Booking /> : null
                             }
                             {
                                 page === 'partnerRequest' ? <PartnerUnvarified /> : null
@@ -120,6 +135,13 @@ function AdminDash() {
                             {
                                 page === 'userRequest' ? <h1>booking</h1> : null
                             }
+                            {
+                                page === 'Coupon' ? <Coupon /> : null
+                            }
+                            {
+                                page === 'AdminSale' ? <AdminSales /> : null
+                            }
+
                         </div>
 
                     </div>

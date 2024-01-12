@@ -20,7 +20,13 @@ export default function BookingSuccessfull() {
                         Payment Successful
                     </h3>
                     <p className="text-gray-600 my-2">
-                        In your Orginal Documents when your comming to take the Bike
+                        In your Orginal Documents when your comming to take the Car<br />
+                        <div className="w-[90%] ">
+                            <p>You can pick up the vehicle at the specified location after 09:00 am  <br /> on the given date  and return the vehicle after 09:00 am on the given date. You Can Chat With him</p>
+                        </div>
+
+
+                        {/*In your Orginal Documents when your comming to take the Car*/}
                     </p>
                     <p>Have a great day!</p>
                     <div className="py-10 text-center flex flex-col md:flex-row md:justify-center">

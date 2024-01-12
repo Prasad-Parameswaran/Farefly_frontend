@@ -38,7 +38,6 @@ function CarDetailsForm() {
 
     const validateImage = (file, field) => {
         if (file == '') {
-            console.log(file)
             setUploadError((prev) => ({ ...prev, [field]: 'Please select an image.' }));
             return false;
         } else {
@@ -56,7 +55,6 @@ function CarDetailsForm() {
         formData.append('file', file)
         formData.append('upload_preset', upload_preset)
         const response = await axios.post(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`, formData)
-        console.log(response, "kkkkkkkkkkkkkkkkkkkkkkkkkk")
         if (response?.data?.secure_url) {
             const data = response.data.secure_url
             setImageOne(data)
@@ -68,12 +66,10 @@ function CarDetailsForm() {
         formData.append('file', e.target.files[0],)
         formData.append('upload_preset', upload_preset)
         const response = await axios.post(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`, formData)
-        console.log(response.data.secure_url, "kkkkkkkkkkkkkkk")
 
         if (response?.data?.secure_url) {
             const data = response.data.secure_url
             setImageTwo(data)
-            //refrsh ? setRefresh(false) : setRefresh(true)
 
 
         }
@@ -86,7 +82,6 @@ function CarDetailsForm() {
         if (response?.data?.secure_url) {
             const data = response.data.secure_url
             setImageThree(data)
-            //refrsh ? setRefresh(false) : setRefresh(true)
 
 
         }
@@ -99,10 +94,6 @@ function CarDetailsForm() {
         if (response?.data?.secure_url) {
             const data = response.data.secure_url
             setImageFour(data)
-            console.log(imageOne, imageTwo, imageThree, imageFour, "jjjjjjjjjjj");
-            //refrsh ? setRefresh(false) : setRefresh(true)
-
-
         }
     }
     const RCimage = async (e) => {
@@ -135,7 +126,6 @@ function CarDetailsForm() {
 
         if (!areImagesValid) {
             toast.error('Please select Images')
-            ///////////////////////da oru image eroroe adichal dipslay akkan ede atuthulka
             return;
         } else {
 

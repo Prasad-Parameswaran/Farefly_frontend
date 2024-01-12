@@ -41,7 +41,6 @@ const editPartnerCar = async (id) => {
 }
 const profileDetails = async () => {
     try {
-        console.log("hhhhhhhhhhhhhh")
         const response = await partner.get('/profileDetails');
         return response;
     } catch (error) {
@@ -50,16 +49,67 @@ const profileDetails = async () => {
 }
 const editPartnerProfile = async (data) => {
     try {
-        console.log("hhhhhhhhhhhhhh", data)
         const response = await partner.post('/editPartnerProfile', { data });
-        console.log(response, "jjjjjjjj");
         return response
     } catch (error) {
         console.log('error occurred', error)
     }
 }
 
+const bookings = async () => {
+    try {
+        const response = await partner.get('/bookingList');
+        return response;
+    } catch (error) {
+        console.log('error occurred', error)
+    }
+}
 
+const statusHandle = async (data) => {
+    try {
+        const response = await partner.post('/statusHandle', { data });
+        return response
+    } catch (error) {
+        console.log('error occurred', error)
+    }
+}
+
+const PartnerCancelBooking = async (id) => {
+    try {
+        const response = await partner.get(`/PartnerCancelBooking?id=${id}`)
+        return response
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
+const getChat = async (id) => {
+    try {
+        const response = await partner.get(`/getChat?id=${id}`)
+        return response
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+const saveChat = async (data) => {
+    try {
+        const response = await partner.post('/saveChat', { data })
+        return response
+
+    } catch (error) {
+        console.log(error.message)
+
+    }
+}
+const Chartbooking = async () => {
+    try {
+        const response = await partner.get('/chartbooking');
+        return response
+
+    } catch (error) {
+        console.log(error.message, "error form front");
+    }
+};
 export {
     partnerLogin,
     addCarImg,
@@ -68,5 +118,12 @@ export {
     profileDetails,
     editPartnerProfile,
     editCar,
-    editPartnerCar
+    editPartnerCar,
+    bookings,
+    statusHandle,
+    PartnerCancelBooking,
+    getChat,
+    saveChat,
+    Chartbooking
+
 };

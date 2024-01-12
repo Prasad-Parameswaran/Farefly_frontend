@@ -7,28 +7,40 @@ import Footer from '../footer/footer';
 import { carList } from '../../../apiConfig/axiosConfig/axiosClientConfig'
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
+
 
 function Home() {
 
     const [district, setDistrict] = useState([])
     const [localArea, setLocalArea] = useState([])
+    const [carListData, setCarListData] = useState([])
     const [selectedDistrict, setSelectedDistrict] = useState('')
     const navigate = useNavigate()
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 3, // Set the number of items to show in a row
+        slidesToScroll: 1,
+    };
 
 
 
     const findDistrict = (val) => {
-        console.log(val)
         setSelectedDistrict(val)
     }
 
     useEffect(() => {
         const list = async () => {
-            console.log('what happend');
             const response = await carList()
-            console.log(response.data.district, 'this is the district ')
             setDistrict(response.data.district)
             setLocalArea(response.data.localArea)
+            setCarListData(response.data.cars)
+
 
         }
         list()
@@ -36,84 +48,51 @@ function Home() {
 
 
     const submitdata = (e) => {
-        e.preventDefault()
-        console.log('here is my form data details ')
-        const val = []
+        e.preventDefault();
+        const val = [];
         const formData = new FormData(e.target);
         const formDataObject = {};
         formData.forEach((value, key) => {
             formDataObject[key] = value;
         });
-        let count = 0
+
+        let count = 0;
+
         for (let key in formDataObject) {
             if (formDataObject.hasOwnProperty(key)) {
-                if (key == 'district' && formDataObject[key] == '') {
-                    toast.error("please select District");
-                    count++
-                    break
-                } else if (key == 'pickUpDate' && formDataObject[key] == '') {
-                    toast.error("please select Start Date");
-                    count++
-                    break
-                } else if (key == 'dropDate' && formDataObject[key] == '') {
-                    toast.error("please add End Date");
-                    count++
-                    break
+                if (key === 'district' && formDataObject[key] === '') {
+                    toast.error("Please select District");
+                    count++;
+                    break;
+                } else if (key === 'pickUpDate' && formDataObject[key] === '') {
+                    toast.error("Please select Start Date");
+                    count++;
+                    break;
+                } else if (key === 'dropDate' && formDataObject[key] === '') {
+                    toast.error("Please add End Date");
+                    count++;
+                    break;
                 }
             }
         }
-        if (count == 0) {
-            console.log(formDataObject)
-            navigate('/cars', { state: formDataObject })
+
+        // Additional date validation
+        const startDate = new Date(formDataObject.pickUpDate);
+        const endDate = new Date(formDataObject.dropDate);
+
+        if (count === 0 && startDate >= endDate) {
+            toast.error("End Date must be later than Start Date");
+            count++;
         }
 
+        if (count === 0) {
+            navigate(`/cars?pickUpDate=${formDataObject.pickUpDate}&&dropDate=${formDataObject.dropDate}&&district=${formDataObject.district}`);
+        }
+    };
 
 
-    }
 
 
-
-    const Card = () => {
-
-        return (
-            < div className=" my-20 ml-5 mt-12 w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <a href="#">
-                    <img className="p-8 rounded-t-lg" src={car} alt=" product image" />
-                </a>
-                <div className="px-5 pb-5">
-                    <a href="#">
-                        <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">Apple Watch Series 7 GPS, Aluminium Case, Starlight Sport</h5>
-                    </a>
-                    <div className="flex items-center mt-2.5 mb-5">
-                        <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                            <svg className="w-4 h-4 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                            </svg>
-                            <svg className="w-4 h-4 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                            </svg>
-                            <svg className="w-4 h-4 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                            </svg>
-                            <svg className="w-4 h-4 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                            </svg>
-                            <svg className="w-4 h-4 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                            </svg>
-                        </div>
-                        <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ms-3">5.0</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <span className="text-3xl font-bold text-gray-900 dark:text-white">$599</span>
-                        <a href="#" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add to cart</a>
-                    </div>
-                </div>
-            </div>
-        )
-
-
-    }
     return (
         <>
 
@@ -121,6 +100,7 @@ function Home() {
                 <div className='sticky top-0 z-50   '>
                     <Navbar />
                 </div >
+
                 <div className='relative h-full overflow-hidden'>
                     <div className='absolute inset-0  '>
                         <img src={image} height={300} className='w-full h-full object-cover' alt="" />
@@ -143,7 +123,7 @@ function Home() {
                                     </p>
                                 </div>
                                 <div class="w-full max-w-md mt[10rem] md:mt-0 mx-auto ">
-                                    <form onSubmit={submitdata} class="relative bg-lime-400 bg-opacity-75 shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col items-center">
+                                    <form onSubmit={submitdata} class="relative bg-gradient-to-br from-green-600 to-lime-500  shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col items-center">
                                         <h2 class="text-2xl font-bold mb-4 text-white">Find the right car now!</h2>
                                         <div class="mb-4 w-full">
                                             <label class="block text-white text-sm font-bold mb-2" for="location">
@@ -187,17 +167,44 @@ function Home() {
                     </div>
 
                 </div >
-                <div className='flex '>
-                    <Card />
-                    <Card />
-                    <Card />
-                    <Card />
-                </div>
 
+                <div className=' flex w-full '>
+                    <div className=' pl-16 pr-16 w-[100%] h-[600px] '>
+                        <Slider {...settings} >
+                            {carListData ?
+                                carListData.map((value, index) => (
+                                    < div className=" my-20 ml-3 mt-12 w-[25%] max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                                        <a href="#">
+                                            <img className=" w-96 h-60 rounded-lg " src={value.carImage1} alt=" product image" />
+                                        </a>
+                                        <div className="px-5 pb-6 ">
+                                            <a href="#">
+                                                <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">{value.discription}</h5>
+                                            </a>
+                                            <div className="flex items-center mt-2.5 mb-5">
+                                                <div className="flex items-center space-x-1 rtl:space-x-reverse">
+                                                    <a href="#">
+                                                        <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">Car Make : {value.carMake}</h5>
+                                                        <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">Car Year : {value.carYear}</h5>
+                                                    </a>
+                                                </div>
+                                                {/*<span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ms-3">5.0</span>*/}
+                                            </div>
 
+                                        </div>
+                                    </div>
+                                ))
+                                : ''
+                            }
+                        </Slider>
+                    </div >
+                </div >
 
             </div >
+
+
             <Footer />
+
         </>
     );
 }

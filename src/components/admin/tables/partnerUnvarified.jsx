@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { partnerList, partnerAuthAccept, partnerAuthCancel, partnerView } from '../../../apiConfig/axiosConfig/axiosAdminConfig'
 import toast from 'react-hot-toast'
 import im from '../../../assets/car1.avif'
+import Swal from 'sweetalert2'
 
 
 //import img from '../../../assets/car1.avif'
@@ -42,20 +43,32 @@ function PartnerUnvarified() {
     }
     const partnerCancel = async (id) => {
         try {
-            await partnerAuthCancel(id).then((res) => {
+            // Use SweetAlert to display a confirmation message
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: 'This action cannot be undone!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Reject it!',
+                cancelButtonText: 'No, keep it'
+            });
+
+            // Check if the user clicked the "Yes" button
+            if (result.isConfirmed) {
+                const res = await partnerAuthCancel(id);
+
                 if (res.data.success) {
-                    setPartner([res.data.data])
-                    toast.success(res.data.message)
+                    setPartner([res.data.data]);
+                    toast.success(res.data.message);
                 } else {
-                    toast.error(res.data.message)
+                    toast.error(res.data.message);
                 }
-
-            })
+            }
         } catch (error) {
-            console.log(error.message);
+            // Handle any errors that may occur during the process
+            console.error('An error occurred:', error.message);
         }
-
-    }
+    };
 
 
     const handleView = async (id) => {

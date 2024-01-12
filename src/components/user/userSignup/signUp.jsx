@@ -72,7 +72,6 @@ const SignUp = () => {
                 }
 
             })
-            console.log('Form is valid. Ready to submit!');
         } else {
             console.log('Form is not valid. Please fix the errors.');
         }
@@ -88,7 +87,7 @@ const SignUp = () => {
             </div>
             <div className='bg-gray-800 flex flex-col justify-center '>
                 <form className='max-w-[400px] w-full mx-auto bg-gray-900 p-8 px-8 rounded rounded-lg border border-white  '>
-                    <h1 className='text-4xl dark:text-white font-bold text-center'>SIGN IN </h1>
+                    <h1 className='text-4xl dark:text-white font-bold text-center'>SIGN UP </h1>
                     <div className='flex flex-col text-gray-400 py-2'>
                         <label htmlFor="">User Name</label>
                         <input className='rounded-lg bg-gray-700 p-2 focus:border-blue-500 focus:bg-gray-800 focus:outline-none' type="text"
@@ -154,12 +153,12 @@ const SignUp = () => {
                     </div>
                     <div className='flex justify-between text-gray-400'>
                         <p className='flex items-center'><input className='mr-2' type="checkbox" />Remember me</p>
-                        <a href=""> Forgot password</a>
+                        {/*<a href=""> Forgot password</a>*/}
                     </div>
                     <button className='w-full my-5 py-2 bg-teal-500 shadow-lg shadow-teal-50/40 hover:shadow-teal-20 text-white font-semibold rounded-lg' onClick={handleSubmit}>SIGN UP</button>
                     <Toaster />
-                    <div className='flex justify-center text-gray-400'>
-                        <a onClick={() => { navigate('/login') }}> SIGN IN</a>
+                    <div className='flex justify-center text-gray-400 '>
+                        <a onClick={() => { navigate('/login') }} className='cursor-pointer'> SIGN IN</a>
                     </div>
                 </form >
             </div >

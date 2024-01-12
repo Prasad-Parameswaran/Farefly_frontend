@@ -6,6 +6,9 @@ import PartnerProfile from './partnerProfile'
 import CarDetailsForm from './addCar'
 import Cars from '../partner/carListPartner'
 import CarList from '../admin/tables/carList'
+import Bookings from './bookings'
+import PartnerChart from './partnerChart'
+import PartnerSales from './salesReport'
 
 function PartnerHome() {
     const [patnerPage, setpatnerPage] = useState('dashboad')
@@ -27,9 +30,9 @@ function PartnerHome() {
             case 'Profile':
                 setpatnerPage('Profile')
                 break;
-            case 'Chat':
-                setpatnerPage('Chat')
-                break;
+            //case 'Chat':
+            //    setpatnerPage('Chat')
+            //    break;
             case 'Add car':
                 setpatnerPage('Add car')
                 break;
@@ -39,6 +42,9 @@ function PartnerHome() {
                 break;
             case 'Bookings':
                 setpatnerPage('Bookings')
+                break;
+            case 'SalesReport':
+                setpatnerPage('SalesReport')
                 break;
         }
     }
@@ -52,19 +58,20 @@ function PartnerHome() {
                     <h1 className="text-2xl font-semibold mb-4 lg:mb-6">Partner Dashboard</h1>
                     <ul className='p-3 w-full'>
 
+
+                        <li className="w-full h-10 hover:bg-gray-300 flex justify-center items-center text-blue-300  hover:text-black cursor-pointer">
+                            <a onClick={() => { handleclick('dashboad') }}  >Dashboad</a>
+                        </li>
                         <li className="w-full h-10 hover:bg-gray-300 flex justify-center items-center  text-blue-300  hover:text-black cursor-pointer">
 
                             <a onClick={() => { handleclick('Profile') }} >Profile</a>
                         </li>
-                        <li className="w-full h-10 hover:bg-gray-300 flex justify-center items-center text-blue-300  hover:text-black cursor-pointer">
-                            <a onClick={() => { handleclick('dashboad') }}  >Dashboad</a>
-                        </li>
                         {/*<li className="w-full h-10 hover:bg-gray-300 flex justify-center items-center  text-blue-300  hover:text-black cursor-pointer">
                             <a></a>
                         </li>*/}
-                        <li className="w-full h-10 hover:bg-gray-300 flex justify-center items-center  text-blue-300  hover:text-black cursor-pointer">
+                        {/*<li className="w-full h-10 hover:bg-gray-300 flex justify-center items-center  text-blue-300  hover:text-black cursor-pointer">
                             <a onClick={() => { handleclick('Chat') }} >Chat</a>
-                        </li>
+                        </li>*/}
                         <li className="w-full h-10 hover:bg-gray-300 flex justify-center items-center  text-blue-300  hover:text-black cursor-pointer">
                             <a onClick={() => { handleclick('Add car') }} >Add car</a>
                         </li>
@@ -73,6 +80,9 @@ function PartnerHome() {
                         </li>
                         <li className="w-full h-10 hover:bg-gray-300 flex justify-center items-center  text-blue-300  hover:text-black cursor-pointer">
                             <a onClick={() => { handleclick('Bookings') }} >Bookings</a>
+                        </li>
+                        <li className="w-full h-10 hover:bg-gray-300 flex justify-center items-center  text-blue-300  hover:text-black cursor-pointer">
+                            <a onClick={() => { handleclick('SalesReport') }} >salesReport</a>
                         </li>
                     </ul>
                 </div>
@@ -96,14 +106,14 @@ function PartnerHome() {
                     <div className="container mx-auto mt-4">
                         <div>
                             {
-                                patnerPage === 'dashboad' ? <h1>dashboard</h1> : null
+                                patnerPage === 'dashboad' ? <PartnerChart /> : null
                             }
                             {
                                 patnerPage === 'Profile' ? <PartnerProfile /> : null
                             }
-                            {
+                            {/*{
                                 patnerPage === 'Chat' ? <h1>chat</h1> : null
-                            }
+                            }*/}
                             {
                                 patnerPage === 'Add car' ? <CarDetailsForm /> : null
                             }
@@ -111,7 +121,10 @@ function PartnerHome() {
                                 patnerPage === 'Cars List' ? <Cars /> : null
                             }
                             {
-                                patnerPage === 'Bookings' ? <h1>booking</h1> : null
+                                patnerPage === 'Bookings' ? <Bookings /> : null
+                            }
+                            {
+                                patnerPage === 'SalesReport' ? <PartnerSales /> : null
                             }
 
                         </div>

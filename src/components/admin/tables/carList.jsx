@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { carDatas, carDetails, ListOrUnlist } from '../../../apiConfig/axiosConfig/axiosAdminConfig'
 import img from '../../../assets/car1.avif'
 import Dashboad from '../../partner/partnerHome'
 import toast from 'react-hot-toast'
+import SideBar from '../adminDashboad/adminDash'
+
 
 function CarList() {
     const [viewCar, setViewCar] = useState(false)
@@ -25,7 +27,6 @@ function CarList() {
     const handleView = async (id) => {
         await carDetails(id).then((res) => {
             if (res.data.success) {
-                console.log(res.data.data, "jjjjjjjjjj");
                 setCarView([res.data.data])
                 setViewCar(true)
             } else {
@@ -35,7 +36,6 @@ function CarList() {
     }
 
     const carListHandle = async (id) => {
-        console.log("thheeeeeeeeeeee", id);
         await ListOrUnlist(id).then((res) => {
             setCarList(res.data.data)
         })
@@ -43,18 +43,20 @@ function CarList() {
 
 
     const search = async (e) => {
-        console.log('this is setsearch car ')
         setSearchCar(e.target.value)
         await findcars()
     }
 
+
+
+
+
+
     const findcars = async (e) => {
-        console.log(searchCar, "this is search car data ");
 
         const response = await carDatas()
         const initialCars = response.data.data;
         setCarList(initialCars)
-        console.log(initialCars.length, 'this is car data');
 
         const trimmedSearchTerm = searchCar.trim()
 
@@ -74,21 +76,24 @@ function CarList() {
             })
         }
         data()
-        console.log(carView, "nnnnnnnnn")
+
     }, [])
+
 
     return (
 
-        < div >
+        <div >
+
+
             {
                 viewCar ?
 
                     <div className=' w-full  h-full  '>
                         {
                             carView.map((value, index) => (
-                                <div className="flex  h-[50%]  " >
+                                <div className="flex h-[50 %]  " >
 
-                                    <div className="bg-white ml-3 rounded-lg h-full w-full shadow dark:bg-gray-700 overflow-y-scroll no-scrollbar " >
+                                    < div className="bg-white ml-3 rounded-lg h-full w-full shadow dark:bg-gray-700 overflow-y-scroll no-scrollbar " >
 
                                         <div className='flex w-full  '>
                                             <h3 className=" flex justify-end w-[55%] text-lg  font-semibold text-gray-900 dark:text-white underline " >

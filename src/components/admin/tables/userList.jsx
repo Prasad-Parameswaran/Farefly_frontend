@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { userList, userStatus } from '../../../apiConfig/axiosConfig/axiosAdminConfig'
-import im from '../../../assets/car1.avif'
+import Swal from 'sweetalert2'
 
 
 //import img from '../../../assets/car1.avif'
@@ -27,12 +27,10 @@ function UserLists() {
     }
 
     const findcars = async (e) => {
-        console.log(searchUser, "this is search car data ");
 
         const response = await userList()
         const initialCars = response.data.data;
         setUsers(initialCars)
-        console.log(initialCars.length, 'this is car data');
 
         const trimmedSearchTerm = searchUser.trim()
 
@@ -47,15 +45,28 @@ function UserLists() {
 
 
     const userblock = async (id) => {
-        await userStatus(id).then((res) => {
-            console.log(res.data.data, "k");
-            setUsers(res.data.data)
-        })
-    }
+        // Use SweetAlert to display a confirmation message
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: 'This will block the user. Do you want to proceed?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, block it!',
+            cancelButtonText: 'No, keep it'
+        });
+
+        if (result.isConfirmed) {
+            try {
+                const res = await userStatus(id);
+                setUsers(res.data.data);
+            } catch (error) {
+                console.error('An error occurred:', error.message);
+            }
+        }
+    };
     useEffect(() => {
         const data = async () => {
             await userList().then((res) => {
-                console.log('data here...........', res.data.data);
                 setUsers(res.data.data)
 
             })

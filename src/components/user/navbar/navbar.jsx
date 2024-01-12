@@ -5,6 +5,7 @@ import { Dropdown, Menu } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { userLO } from '../../../redux/slices/userSlice';
+import LogOutButton from '../userLog/logOutButton';
 
 
 
@@ -13,18 +14,20 @@ function Navbar() {
     const [isuser, setIsuser] = useState(false)
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const handleLogout = () => {
+
+    const HandleLogout = () => {
         localStorage.removeItem('Token')
         dispatch(userLO())
+
 
     }
     let userLogined = [
         { label: <a onClick={() => { navigate('/profile') }}>Profile</a>, key: '0' },
         //{ label: <a>Wallet</a>, key: '1' },
-        { label: <a>Bookings</a>, key: '2' },
-        { label: <a a onClick={() => { navigate('/partner/partnerlogin') }}>Login Partner</a>, key: '3' },
+        //{ label: <a>Bookings</a>, key: '2' },
+        { label: <a a onClick={() => { navigate('/partner/partnerlogin') }}>Login Partner</a>, key: '1' },
         {
-            label: <a onClick={() => { handleLogout() }}> Logout</ a >, key: '4'
+            label: <a onClick={() => { HandleLogout() }}> Logout</ a >, key: '2'
         },
     ];
 
@@ -41,6 +44,10 @@ function Navbar() {
 
         }
         )
+    }
+
+    const handleAuth = (a) => {
+        console.log(a, 'this sisjs')
     }
     const menuItems = isuser ? userLogined : noUser;
 
@@ -61,22 +68,22 @@ function Navbar() {
                         {/*<li>
                             <a onClick={() => { navigate('/cars') }} class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 cursor-pointer ">Cars</a>
                         </li>*/}
-                        <li>
-                            <a href="#" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 cursor-pointer ">About</a>
-                        </li>
-                        <li>
-                            {/*<a href="#" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 cursor-pointer ">blog</a>*/}
-                        </li>
+                        {/*<li>*/}
+                        {/*<a href="#" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 cursor-pointer ">About</a>*/}
+                        {/*</li>*/}
+                        {/*<li>*/}
+                        {/*<a href="#" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 cursor-pointer ">blog</a>*/}
+                        {/*</li>*/}
                         <li>
                             <a onClick={() => { navigate('/partner/joinus') }} class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 cursor-pointer " > Join Us</a>
                         </li>
                         <li>
-                            <a href="#" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 cursor-pointer ">Offers</a>
+                            <a onClick={() => { navigate('/coupon') }} class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 cursor-pointer " > Coupon</a>
                         </li>
                         <li>
                             <Dropdown pdown
                                 overlay={
-                                    <Menu>
+                                    <Menu >
                                         {menuItems.map((item) => (
                                             <Menu.Item key={item.key}>{item.label}</Menu.Item>
                                         ))}

@@ -1,7 +1,9 @@
 import React from 'react'
 import farfly from '../../../assets/Firefly.png';
+import { useNavigate } from 'react-router-dom';
 
 function Footer() {
+    const navigate = useNavigate()
     return (
         <div>
             <footer class="bg-white dark:bg-gray-900">
@@ -15,35 +17,35 @@ function Footer() {
                         </div>
                         <div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
                             <div>
-                                <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Resources</h2>
+                                {/*<h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Navbar</h2>*/}
                                 <ul class="text-gray-500 dark:text-gray-400 font-medium">
                                     <li class="mb-4">
-                                        <a href="" class="hover:underline">Flowbite</a>
+                                        <a onClick={() => { navigate('/') }} class="hover:underline">Home</a>
                                     </li>
                                     <li>
-                                        <a href="" class="hover:underline">Tailwind CSS</a>
+                                        <a onClick={() => { navigate('/coupon') }} class="hover:underline">Coupon</a>
                                     </li>
                                 </ul>
                             </div>
                             <div>
-                                <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Follow us</h2>
+                                {/*<h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Navbar</h2>*/}
                                 <ul class="text-gray-500 dark:text-gray-400 font-medium">
                                     <li class="mb-4">
-                                        <a href="" class="hover:underline ">Github</a>
+                                        <a onClick={() => { navigate('/profile') }} class="hover:underline">Join us</a>
                                     </li>
                                     <li>
-                                        <a href="" class="hover:underline">Discord</a>
+                                        <a onClick={() => { navigate('/profile') }} class="hover:underline">PartnerLogin</a>
                                     </li>
                                 </ul>
                             </div>
                             <div>
-                                <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Legal</h2>
+                                {/*<h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Navbar</h2>*/}
                                 <ul class="text-gray-500 dark:text-gray-400 font-medium">
                                     <li class="mb-4">
-                                        <a href="#" class="hover:underline">Privacy Policy</a>
+                                        <a onClick={() => { navigate('/profile') }} class=" hover:underline" > Profile</a>
                                     </li>
                                     <li>
-                                        <a href="#" class="hover:underline">Terms &amp; Conditions</a>
+                                        <a onClick={() => { navigate('/login') }} class="hover:underline">Login</a>
                                     </li>
                                 </ul>
                             </div>
@@ -87,9 +89,9 @@ function Footer() {
                         </div>
                     </div>
                 </div>
-            </footer>
+            </footer >
 
-        </div>
+        </div >
     )
 }
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 
+
 const clientAxiosIntercepter = (url) => {
-    console.log("this is url=====================================");
     const instance = axios.create({
         baseURL: `http://localhost:4000/`,
     });
@@ -11,21 +11,40 @@ const clientAxiosIntercepter = (url) => {
             const tokenData = localStorage.getItem('Token');
             if (tokenData) {
                 config.headers['Authorization'] = `Bearer ${localStorage.getItem('Token')}`;
-                console.log('configinakath------------ keri');
             }
             return config;
         },
         error => {
-            console.log('ibade error adichu....');
             return Promise.reject(error);
 
         }
     );
 
-    return instance;
+    instance.interceptors.response.use(
+        (response) => {
+            return response;
+        },
+        (error) => {
+            if (error.response) {
+                if (error.response.status === 401) {
+                    window.location.href = "/error404";
+                } else if (error.response.status === 500) {
+                    window.location.href = "/error500";
+                } else {
+                    console.log("HTTP ERROR CODE:", error.response.status);
+                }
+            } else if (error.request) {
+                console.log("Network Error:", error.message);
+            } else {
+                console.log("Error:", error.message);
+            }
+            return Promise.reject(error);
+        }
+    );
+
+    return instance
 }
 const partnerAxiosIntercepter = (url) => {
-    console.log(url);
     const instance = axios.create({
         baseURL: `http://localhost:4000/partner/`,
     });
@@ -45,29 +64,67 @@ const partnerAxiosIntercepter = (url) => {
         }
     );
 
+    instance.interceptors.response.use(
+        (response) => {
+            return response;
+        },
+        (error) => {
+            if (error.response) {
+                if (error.response.status === 401) {
+                    window.location.href = "/error404";
+                } else if (error.response.status === 500) {
+                    window.location.href = "/error500";
+                } else {
+                    console.log("HTTP ERROR CODE:", error.response.status);
+                }
+            } else if (error.request) {
+                console.log("Network Error:", error.message);
+            } else {
+                console.log("Error:", error.message);
+            }
+            return Promise.reject(error);
+        }
+    );
+
     return instance;
 }
 
 const adminAxiosIntercepter = (url) => {
-    console.log(url);
     const instance = axios.create({
         baseURL: `http://localhost:4000/admin/`,
     });
 
     instance.interceptors.request.use(
         config => {
-            console.log('ivideyum ethi')
-
             const tokenData = localStorage.getItem('adminToken');
-            console.log('1');
             if (tokenData) {
                 config.headers['Authorization'] = `Bearer ${localStorage.getItem('adminToken')}`;
             }
             return config;
         },
         error => {
-            console.log('error ahnu ethi')
 
+            return Promise.reject(error);
+        }
+    )
+    instance.interceptors.response.use(
+        (response) => {
+            return response;
+        },
+        (error) => {
+            if (error.response) {
+                if (error.response.status === 401) {
+                    window.location.href = "/error404";
+                } else if (error.response.status === 500) {
+                    window.location.href = "/error500";
+                } else {
+                    console.log("HTTP ERROR CODE:", error.response.status);
+                }
+            } else if (error.request) {
+                console.log("Network Error:", error.message);
+            } else {
+                console.log("Error:", error.message);
+            }
             return Promise.reject(error);
         }
     );

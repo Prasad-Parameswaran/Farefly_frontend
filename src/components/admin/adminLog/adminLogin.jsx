@@ -5,7 +5,6 @@ import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { adminLG } from '../../../redux/slices/adminSlice'
 import { adminLogin } from '../../../apiConfig/axiosConfig/axiosAdminConfig';
-//import { adminLogin } from '../../../apiConfig/axiosConfig/axiosAdminConfig'
 
 
 export default function AdminLogin() {
@@ -42,7 +41,6 @@ export default function AdminLogin() {
                 password,
             };
             await adminLogin(admin).then((response) => {
-                console.log("oooooooooooooooooooo")
                 if (response.data.success) {
                     localStorage.setItem('adminToken', response.data.adminToken)
                     dispatch(adminLG(response.data.adminToken))

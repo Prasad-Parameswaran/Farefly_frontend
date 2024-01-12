@@ -5,14 +5,11 @@ const client = clientAxiosIntercepter(url);
 
 
 const clientLogin = async (data) => {
-    console.log(data, "partjer");
     const response = await client.post('/login', { data })
     return response
-
 }
 const profileData = async () => {
     try {
-        console.log("hhhhhhhhhhhhhh")
         const response = await client.get('/profile');
         return response;
     } catch (error) {
@@ -21,9 +18,7 @@ const profileData = async () => {
 }
 const addProfile = async (data) => {
     try {
-        console.log("hhhhhhhhhhhhhh", data)
         const response = await client.post('/addProfile', { data });
-        console.log(response, "jjjjjjjj");
         return response
     } catch (error) {
         console.log('error occurred', error)
@@ -31,23 +26,24 @@ const addProfile = async (data) => {
 }
 const editProfile = async (data) => {
     try {
-        console.log("hhhhhhhhhhhhhh", data)
         const response = await client.post('/editProfile', { data });
-        console.log(response, "jjjjjjjj");
         return response
     } catch (error) {
         console.log('error occurred', error)
     }
 }
 const partnerSignup = async (data) => {
-    console.log(data, "partjer");
     const response = await client.post('/Partnersignup', { data })
     return response
 
 }
 const carList = async () => {
-    console.log("entering---------");
     const response = await client.get('/carlist')
+    return response
+
+}
+const carListPost = async (data) => {
+    const response = await client.post('/carlistpost', { data })
     return response
 
 }
@@ -57,25 +53,27 @@ const forgotPass = async (data) => {
 
 }
 const varifyOtp = async (data) => {
-    console.log("jooooooooooo");
     const response = await client.post('/otp', { data })
     return response
 
 }
 const newPassword = async (data) => {
-    console.log("jooooooooooo");
     const response = await client.post('/newpassword', { data })
     return response
 
 }
 const findHomeSearch = async (data) => {
-    console.log("jooooooooooo");
     const response = await client.post('/findHomeSearch', { data })
     return response
 
 }
-const findLocalAreaCar = async (id) => {
-    const response = await client.get(`/findLocalAreaCar?id=${id}`)
+const DatesAvailable = async (data) => {
+    const response = await client.post('/DatesAvailable', { data })
+    return response
+
+}
+const findLocalAreaCar = async (data) => {
+    const response = await client.post(`/findLocalAreaCar`, { data })
     return response
 
 }
@@ -114,8 +112,71 @@ const Bookinghistory = async () => {
     }
 }
 
+
+const handleCancel = async (id) => {
+    try {
+        const response = await client.get(`/bookingCancel?id=${id}`)
+        return response
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
+const CouponList = async () => {
+    try {
+        const response = await client.get('/CouponList')
+        return response
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
+const Applycoupon = async (data) => {
+    try {
+        const response = await client.post('/applycoupon', { data })
+        return response
+
+    } catch (error) {
+        console.log(error.message)
+
+    }
+}
+
+
+
+const googleAuthentication = async (data) => {
+    try {
+        const response = await client.post('/googleAuthentication', { data })
+        return response
+
+    } catch (error) {
+        console.log(error.message)
+
+    }
+}
+const getChat = async (id) => {
+    try {
+        const response = await client.get(`/getChat?id=${id}`)
+        return response
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+const saveChat = async (data) => {
+    try {
+        const response = await client.post('/saveChat', { data })
+        return response
+
+    } catch (error) {
+        console.log(error.message)
+
+    }
+}
+
 export {
     profileData, partnerSignup, clientLogin, carList, forgotPass, varifyOtp,
     newPassword, findLocalAreaCar, findDistrictCar, addProfile, editProfile, findHomeSearch,
-    bookingCarDeatils, finalbooking, Bookinghistory
+    bookingCarDeatils, finalbooking, Bookinghistory, handleCancel, CouponList, Applycoupon, googleAuthentication, getChat,
+    saveChat, DatesAvailable, carListPost
+
 };

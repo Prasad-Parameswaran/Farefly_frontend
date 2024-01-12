@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import Navbar from '../../../components/user/navbar/navbar'
 import Footer from '../../../components/user/footer/footer'
-import { carList, findDistrictCar, findLocalAreaCar, findHomeSearch } from '../../../apiConfig/axiosConfig/axiosClientConfig'
-import CarFliter from '../../../components/user/manupulateCar/carfilter'
+import { carList, findDistrictCar, findLocalAreaCar, findHomeSearch, carListPost } from '../../../apiConfig/axiosConfig/axiosClientConfig'
 import toast from 'react-hot-toast'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import _debounce from 'lodash/debounce';
+import { useLocation, useNavigate } from 'react-router-dom'
 
 function CarsList() {
     const [cars, setCars] = useState([])
@@ -23,21 +23,27 @@ function CarsList() {
     const [defaultDistrict, setDefaultDistrict] = useState('')
     const location = useLocation()
 
-    const data = location.state
-    const search = async (e) => {
-        setSearchCar(e.target.value)
-        await findcars()
+
+    const searchParams1 = new URLSearchParams(location.search)
+
+    const pickUpDate = searchParams1.get("pickUpDate")
+    const dropDate = searchParams1.get("dropDate")
+    const districtName = searchParams1.get("district")
+    const data = {
+        pickUpDate: pickUpDate,
+        dropDate: dropDate,
+        district: districtName,
     }
 
-    const findcars = async () => {
-        console.log(searchCar, "this is search car data ");
 
-        const response = await carList();
+
+    const findcars = async () => {
+        data.districtChanges = districtVal
+        const response = await carListPost(data);
         const initialCars = response.data.carList;
         setDitstrict(response.data.district);
         setLocalArea(response.data.localArea);
         setCars(initialCars);
-        console.log(initialCars.length, 'this is car data');
 
         const trimmedSearchTerm = searchCar.trim()
 
@@ -51,6 +57,17 @@ function CarsList() {
     };
 
 
+    const search = (e) => {
+        setSearchCar(e.target.value);
+    }
+
+    useEffect(() => {
+        const timeDelay = setTimeout(() => {
+            findcars()
+        }, 1000);
+        return () => clearTimeout(timeDelay)
+
+    }, [searchCar])
 
     const findDistrict = async (value) => {
         const val = {
@@ -58,11 +75,11 @@ function CarsList() {
             dropDate: end,
             district: value
         }
-        console.log(val, 'this is district all data....')
+        setDistrictVal(value)
         const response = await findDistrictCar(val)
         if (response.data.car) {
             setCars(response.data.car)
-            //setLocalArea(response.data.localArea)
+            setLocalArea(response.data.localArea)
             setDitstrictSelect(true)
             setDistrictVal(value)
         } else {
@@ -72,11 +89,10 @@ function CarsList() {
     }
 
     const find = async (value) => {
-        console.log(value)
         setStart(value.pickUpDate)
         setEnd(value.dropDate)
         setDefaultDistrict(value.district)
-        console.log(value, "kkkkkkkkkkkkkkk")
+        setDistrictVal(value.district)
         const response = await findHomeSearch(value)
         if (response.data.data) {
             setCars(response.data.data)
@@ -88,6 +104,22 @@ function CarsList() {
         }
 
     }
+
+    const dateObject = new Date(data.pickUpDate);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDate = dateObject.toLocaleDateString('en-US', options);
+    const dateObjec = new Date(data.dropDate);
+    const option = { year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDat = dateObjec.toLocaleDateString('en-US', option);
+
+
+    const endDate = new Date(data.dropDate);
+    const startingDate = new Date(data.pickUpDate)
+    const timeDifference = endDate.getTime() - startingDate.getTime();
+    const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+
+
+
     const dateFilter = async (e) => {
         e.preventDefault()
         const formData = new FormData(e.target);
@@ -95,7 +127,6 @@ function CarsList() {
         formData.forEach((value, key) => {
             formDataObject[key] = value;
         });
-        console.log(formDataObject, 'this is date data ')
         let count = 0
         for (let key in formDataObject) {
             if (formDataObject.hasOwnProperty(key)) {
@@ -118,7 +149,6 @@ function CarsList() {
                 break;
             } else {
                 formDataObject.district = districtVal
-                console.log(formDataObject, 'this is my form data')
                 setFormDataObj(formDataObject)
                 const response = await findHomeSearch(formDataObject)
                 if (response.data.data) {
@@ -135,12 +165,16 @@ function CarsList() {
         }
     }
 
-    const findLocalArea = async (value) => {
+    const findLocalArea = async (val) => {
+
+        const value = {
+            localArea: val,
+            pickUpDate: start,
+            dropDate: end
+
+        }
         const response = await findLocalAreaCar(value)
-
         if (response.data.car) {
-            console.log(response.data.car, response.data.localArea, ';;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;')
-
             setCars(response.data.car)
             setLocalArea(response.data.localArea)
             setDitstrictSelect(true)
@@ -169,11 +203,12 @@ function CarsList() {
                 carId: id,
                 district: districtVal,
             }
-            navigate('/booking', { state: obj })
+            navigate(`/booking?pickUpDate=${start}&&dropDate=${end}&&carId=${id}&&district=${districtVal}`)
         }
 
 
     }
+
 
 
     useEffect(() => {
@@ -182,12 +217,17 @@ function CarsList() {
             setTimeout(() => {
                 find(data)
                 setLoder('')
-            }, 1000);
+            }, 1050);
 
         }
         list()
 
     }, [])
+
+
+
+
+
 
 
     return (
@@ -267,21 +307,21 @@ function CarsList() {
                         <div className=' flex flex-col  '>
                             <div className='border border-t-2 p-2'>
                                 <h1 className='font-bold text-lg'>Pick up information</h1>
-                                <h1>FareFly, Calicut Beach Road, Calicut
-                                    Wed, 20 'Dec' '23, 07:15 PM
+                                <h1>FareFly, {data.district}  Road, {data.district} ,
+                                    {formattedDate}  '23, 09:00 AM
                                 </h1>
                             </div>
                             <div className='border border-t-2 p-2'>
                                 <h1 className='font-bold text-lg'>Drop off information</h1>
-                                <h1>FareFly, Calicut Beach Road, Calicut
-                                    Fri, 28 Dec '23, 08:00 AM
+                                <h1>FareFly, {data.district}  Road,{data.district} ,
+                                    {formattedDat} , 09:00 AM
                                 </h1>
                             </div>
                         </div>
                         <div>
                             <div className='text-center'>
                                 <h1 className='font-bold text-lg'>Total travel duration</h1>
-                                <h1>22 Days 0 Hour 0 Min</h1>
+                                <h1>{daysDifference} Days 0 Hour 0 Min</h1>
                             </div>
                         </div>
                     </>
@@ -293,10 +333,15 @@ function CarsList() {
 
                             <select id="small" onChange={(e) => { findDistrict(e.target.value) }} class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-black shadow-lime-500/50  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" >
 
-                                <option  >choose District</option>
+                                <option>{districtVal}</option>
                                 {district &&
                                     district.map((value, index) => (
-                                        <option value={value}  > {value}</option>
+                                        value !== districtVal && (
+                                            <option key={index} value={value}>
+                                                {value}
+                                            </option>
+                                        )
+
                                     ))}
                             </select>
 
@@ -350,7 +395,7 @@ function CarsList() {
                                                 <h1 className='font-bold text-2xl'>{value.carMake}</h1>
                                                 <h1 className='font-bold '>{value.fuelType},{value.transmission},{value.carYear}</h1>
                                             </>
-                                            <div>
+                                            {/*<div>
 
                                                 <div class="flex items-center pt-3">
                                                     <svg class="w-4 h-4 text-yellow-300 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
@@ -370,11 +415,11 @@ function CarsList() {
                                                     </svg>
                                                 </div>
 
-                                            </div>
+                                            </div>*/}
 
                                         </div>
                                         <div className='w-[200px] h-full  ' >
-                                            <h1 className='font-bold text-2xl'>{value.price}</h1>
+                                            <h1 className='font-bold text-2xl'>{value.price}₹/day</h1>
                                             <h1>For 2640 kms without fuel</h1>
                                             <button type="button" onClick={() => { booking(value._id) }} className="  mt-7 text-gray-900 bg-gradient-to-r from-lime-200 via-lime-400 to-lime-500 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-lime-300
                                          dark:focus:ring-lime-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Book Now</button>

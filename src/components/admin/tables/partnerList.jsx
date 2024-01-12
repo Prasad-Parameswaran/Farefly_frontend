@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { partnerList, partnerStatus, partnerView } from '../../../apiConfig/axiosConfig/axiosAdminConfig'
 import im from '../../../assets/car1.avif'
 import toast from 'react-hot-toast'
+import Swal from 'sweetalert2'
 
-//import img from '../../../assets/car1.avif'
+
 
 function PartnerList() {
     const [partner, setPartner] = useState([])
@@ -26,10 +27,25 @@ function PartnerList() {
     }
 
     const partnerBlock = async (id) => {
-        await partnerStatus(id).then((res) => {
-            console.log(res.data.data, "kkkkkkk");
-            setPartner(res.data.data)
-        })
+        // Use SweetAlert to display a confirmation message
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: 'This will block the partner. Do you want to proceed?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, block it!',
+            cancelButtonText: 'No, keep it'
+        });
+
+        if (result.isConfirmed) {
+            try {
+                const res = await partnerStatus(id);
+                console.log(res.data.data, "kkkkkkk");
+                setPartner(res.data.data);
+            } catch (error) {
+                console.error('An error occurred:', error.message);
+            }
+        }
     }
 
     const handleView = async (id) => {
@@ -49,12 +65,10 @@ function PartnerList() {
     }
 
     const findcars = async (e) => {
-        console.log(searchPartner, "this is search car data ");
 
         const response = await partnerList()
         const initialCars = response.data.data;
         setPartner(initialCars)
-        console.log(initialCars.length, 'this is car data');
 
         const trimmedSearchTerm = searchPartner.trim()
 
@@ -71,7 +85,6 @@ function PartnerList() {
     useEffect(() => {
         const data = async () => {
             await partnerList().then((res) => {
-                console.log('data here...........');
                 setPartner(res.data.data)
             })
         }

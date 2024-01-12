@@ -17,7 +17,6 @@ function PartnerProfile() {
             const res = await profileDetails()
             if (res.data.success) {
                 setPartner(res.data.data)
-                console.log(res.data.data, "this is partners profile details")
             }
 
         } catch (error) {
@@ -28,14 +27,12 @@ function PartnerProfile() {
 
     const handleProfile = async (event) => {
         try {
-            console.log('ibide ethiyittund');
             const file = event.target.files[0]
             const formData = new FormData()
             formData.append('file', file)
             formData.append('upload_preset', upload_preset)
             const response = await axios.post(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`, formData)
             if (response?.data?.secure_url) {
-                console.log(response.data.secure_url, '12345');
                 setPartnerImg(response.data.secure_url)
                 const data = response.data.secure_url
             }
@@ -53,7 +50,6 @@ function PartnerProfile() {
             formDataObject[key] = value;
         });
         formDataObject.partnerImage = partnerImg;
-        console.log(formDataObject, 'this is my form all details ');
 
         const response = await editPartnerProfile(formDataObject)
         if (response.data.success) {

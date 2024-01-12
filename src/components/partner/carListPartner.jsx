@@ -44,7 +44,6 @@ function PartnerCarList() {
 
     const validateImage = (file, field) => {
         if (file == '') {
-            console.log(file)
             setUploadError((prev) => ({ ...prev, [field]: 'Please select an image.' }));
             return false;
         } else {
@@ -61,7 +60,6 @@ function PartnerCarList() {
         formData.append('file', file)
         formData.append('upload_preset', upload_preset)
         const response = await axios.post(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`, formData)
-        console.log(response, "kkkkkkkkkkkkkkkkkkkkkkkkkk")
         if (response?.data?.secure_url) {
             const data = response.data.secure_url
             setImageOne(data)
@@ -73,7 +71,6 @@ function PartnerCarList() {
         formData.append('file', e.target.files[0],)
         formData.append('upload_preset', upload_preset)
         const response = await axios.post(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`, formData)
-        console.log(response.data.secure_url, "kkkkkkkkkkkkkkk")
 
         if (response?.data?.secure_url) {
             const data = response.data.secure_url
@@ -101,9 +98,6 @@ function PartnerCarList() {
         if (response?.data?.secure_url) {
             const data = response.data.secure_url
             setImageFour(data)
-            console.log(imageOne, imageTwo, imageThree, imageFour, "jjjjjjjjjjj");
-            //refrsh ? setRefresh(false) : setRefresh(true)
-
 
         }
     }
@@ -152,7 +146,6 @@ function PartnerCarList() {
             formDataObject.Rc = rcimage;
             formDataObject.carId = carEdit._id
             formDataObject.dropPoint = items;
-            console.log(formDataObject);
             const response = await editCar(formDataObject)
             if (response.data.success) {
                 toast.success(response.data.message)
@@ -168,7 +161,6 @@ function PartnerCarList() {
     };
 
     const editForm = async (id) => {
-        console.log('this is the partner specific cardetails');
         const val = carList.find((value) => {
             return value._id === id
         })
@@ -185,7 +177,6 @@ function PartnerCarList() {
     const handleView = async (id) => {
         await partnerCarDetail(id).then((res) => {
             if (res.data.success) {
-                console.log(res.data.data, "jjjjjjjjjj");
                 setCarView([res.data.data])
                 setViewCar(true)
             } else {
@@ -205,20 +196,17 @@ function PartnerCarList() {
 
 
     const search = async (e) => {
-        console.log('this is setsearch car ')
         setSearchCar(e.target.value)
         await findcars()
     }
 
     const findcars = async (e) => {
-        console.log(searchCar, "this is search car data ");
 
         const response = await partnerCars()
 
         setCars(true)
         const initialCars = response.data.data;
         setCarList(initialCars)
-        console.log(initialCars.length, 'this is car data');
 
         const trimmedSearchTerm = searchCar.trim()
 

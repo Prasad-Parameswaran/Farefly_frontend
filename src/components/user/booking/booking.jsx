@@ -2,37 +2,54 @@ import { useState, useEffect } from "react";
 import UserNav from "../navbar/navbar";
 import Footer from "../footer/footer";
 import { useLocation, useNavigate } from "react-router-dom";
-import { bookingCarDeatils, finalbooking } from '../../../apiConfig/axiosConfig/axiosClientConfig'
+import { bookingCarDeatils, finalbooking, Applycoupon, DatesAvailable } from '../../../apiConfig/axiosConfig/axiosClientConfig'
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import toast from "react-hot-toast";
 
 
 export default function BikeBooking() {
     const location = useLocation();
-    const [bookingData, setBookingData] = useState(location.state)
+    const [bookingData, setBookingData] = useState({})
     const [grossAmount, setGrossAmount] = useState(Number)
     const [bookingCar, setBookingCar] = useState([])
     const [dayCount, setDayCount] = useState(Number)
+    const [discount, setDiscount] = useState(0)
     const [cgst, setCgst] = useState(Number)
     const [sgst, setSgst] = useState(Number)
     const [totalAmount, setTotalAmount] = useState()
     const [selectedMethod, setSelectedMethod] = useState("");
     const [checkOut, setCheckOut] = useState(false)
+    const [loder, setLoder] = useState('')
+    const [localAreaName, setLocalAreaName] = useState('')
+    const [onlineSelect, setOnlineSelect] = useState(true)
+
 
     const navigate = useNavigate()
 
+    const searchParams1 = new URLSearchParams(location.search)
+
+    const pickUpDate = searchParams1.get("pickUpDate")
+    const dropDate = searchParams1.get("dropDate")
+    const carId = searchParams1.get("carId")
+    const district = searchParams1.get("district")
+    const value = {
+        pickUpDate: pickUpDate,
+        dropDate: dropDate,
+        carId: carId,
+        district: district,
+    }
+
+
     const dateCount = async (carprize) => {
-        const dropDate = new Date(bookingData.dropDate);
-        const pickUpDate = new Date(bookingData.pickUpDate);
+        const dropDate = new Date(value.dropDate);
+        const pickUpDate = new Date(value.pickUpDate);
         dropDate.setHours(0, 0, 0, 0);
         pickUpDate.setHours(0, 0, 0, 0);
 
         const timeDifference = dropDate - pickUpDate;
-        console.log(timeDifference, 'this is time difference');
 
         const count = Math.round(timeDifference / (1000 * 60 * 60 * 24)) + 1;
         setDayCount(count)
-        console.log(count, 'count day')
 
         const amount = count * carprize.price;
         const cgstAmount = Math.floor(amount * (5 / 100))
@@ -43,123 +60,177 @@ export default function BikeBooking() {
         setCgst(cgstAmount);
         setSgst(sgstAmount);
 
-        //toast.success(response.data.message)
     }
-
     const datas = {
         bookingData: bookingData,
         dayCount: dayCount,
         cgst: cgst,
         sgst: sgst,
         totalAmount: totalAmount,
-        PaymentMethod: selectedMethod
+        PaymentMethod: selectedMethod,
+        discountAmount: discount,
     }
     const providebooking = async () => {
         try {
-            const response = await finalbooking(datas)
-            if (response.data.wallet) {
-                toast.success("Booking Started");
-                navigate("/BookingSuccessfull");
-            } else if (response.data.notamount) {
-                toast.error(response.data.notamount);
-            } else if (response.data.messages) {
-                toast.error(response.data.messages); // Display license error message
+            datas.localArea = localAreaName
+            const res = await DatesAvailable(datas)
+            if (!res.data.success) {
+                toast.error(res.data.message)
+            } else {
+                const response = await finalbooking(datas)
+                if (response.data.wallet) {
+                    toast.success("Booking Started");
+                    navigate("/BookingSuccessfull");
+                } else if (response.data.notamount) {
+                    toast.error(response.data.notamount);
+                } else if (response.data.messages) {
+                    toast.error(response.data.messages);
+                }
             }
-
         } catch (error) {
             console.log(error.message);
         }
     }
 
-    const handleMethodSelect = (method) => {
+    const handleMethodSelect = async (method) => {
         if (method == 'wallet') {
             setCheckOut(false)
         }
-        setSelectedMethod(method);
+        setSelectedMethod(method)
+
+    }
 
 
-    };
+    const CouponApply = async (couponCo) => {
+        const coponData = document.getElementById(couponCo).value
+        const data = {
+            code: coponData,
+            amonut: totalAmount
+        }
+        const response = await Applycoupon(data)
+        if (response.data.success) {
+            const total = totalAmount - response.data.amount
+            setTotalAmount(total)
+            setDiscount(response.data.amount)
+            toast.success(response.data.message)
 
+        } else {
+            toast.error(response.data.message)
+
+        }
+
+    }
 
     const singleCar = async () => {
-        await bookingCarDeatils(bookingData.carId).then((response) => {
+        await bookingCarDeatils(value.carId).then((response) => {
             if (response.data.success) {
-                console.log(response.data.data, 'this is i,..........')
                 setBookingCar([response.data.data])
+                setLocalAreaName(response.data.data.owner.localArea)
                 dateCount(response.data.data)
             } else {
-                console.log('2nd ethi code pottipoyi')
                 toast.error(response.data.data.message)
             }
         })
     }
 
     function renderUpiPayment() {
-        console.log('hello this is online payment ..............')
+
+        const AvailableOrnot = async () => {
+            if (selectedMethod == 'online') {
+                const res = await DatesAvailable(datas)
+                if (!res.data.success) {
+                    toast.error(res.data.message)
+                    setOnlineSelect(false)
+                }
+            }
+        }
+        AvailableOrnot()
         return (
             <div className="flex justify-center">
-                {/* <button className="bg-blue-500 text-white font-bold py-2 px-4 rounded">Pay with PayPal</button> */}
+                {onlineSelect &&
 
-                <PayPalScriptProvider options={{ "client-id": "Ab6K-WViVZviqKgbf9P0n7Pa9gjagaWrL-jNqOnCaUcbVLGRepbrQxo1MNx5qs5KSo_rnEj59xe3Tes1" }}>
-                    <PayPalButtons
-                        style={{
-                            color: "blue",
-                            shape: "pill",
-                            label: "pay",
-                            height: 40,
-                        }}
-                        createOrder={(data, actions) => {
-                            return actions.order.create({
-                                purchase_units: [
-                                    {
-                                        amount: {
-                                            value: datas.totalAmount,
+                    < PayPalScriptProvider options={{ "client-id": "Ab6K-WViVZviqKgbf9P0n7Pa9gjagaWrL-jNqOnCaUcbVLGRepbrQxo1MNx5qs5KSo_rnEj59xe3Tes1" }}>
+                        <PayPalButtons
+                            style={{
+                                color: "blue",
+                                shape: "pill",
+                                label: "pay",
+                                height: 40,
+                            }}
+                            createOrder={(data, actions) => {
+                                return actions.order.create({
+                                    purchase_units: [
+                                        {
+                                            amount: {
+                                                value: datas.totalAmount,
+                                            },
                                         },
-                                    },
-                                ],
-                            });
-                        }}
-                        onApprove={async (data, actions) => {
-                            //console.log("onApprove data:", data);
-                            console.log("onApprove actions:", actions);
+                                    ],
+                                });
+                            }}
+                            onApprove={async (data, actions) => {
 
-                            try {
-                                const res = await actions.order.capture();
-                                const response = await finalbooking(datas)
-                                if (response.data.success) {
-                                    navigate("/BookingSuccessfull")
-                                    toast.success('Booking successful');
-                                } else {
-                                    toast.error('something went wrong...');
+                                try {
+                                    const res = await DatesAvailable(datas)
+                                    if (!res.data.success) {
+                                        toast.error(res.data.message)
+                                    } else {
+                                        const res = await actions.order.capture();
+                                        const response = await finalbooking(datas)
+                                        if (response.data.success) {
+                                            navigate("/BookingSuccessfull")
+                                            toast.success('Booking successful');
+                                        } else {
+                                            toast.error('something went wrong...');
+                                        }
+                                    }
+                                } catch (error) {
+
+                                    toast.error('Error capturing payment');
                                 }
-                            } catch (error) {
-                                console.error("Capture error:", error);
+                            }}
+                        />
+                    </PayPalScriptProvider>
 
-                                // Handle capture error, e.g., show an error message
-                                toast.error('Error capturing payment');
-                            }
-                        }}
-                    />
-                </PayPalScriptProvider>
-
-
-            </div>
+                }
+            </div >
         );
     }
+    //useEffect(() => {
+    //    const BookingLocation = async () => {
 
 
+    //    }
+    //    BookingLocation()
+
+    //}, [])
 
     useEffect(() => {
-        singleCar()
-    }, [])
+        const list = async () => {
+            try {
+                setBookingData(value)
+                await singleCar()
+            } catch (error) {
+                toast.error("Error fetching car details");
+            }
+        }
+
+        list();
+    }, []);
+
+
+
 
     return (
         <div >
             < div className="sticky top-0 z-50" >
                 <UserNav />
             </div >
+
             {!bookingCar.length == 0 &&
+
                 < div className="mt-8 md:mt-2 h-auto lg:h-[700px] flex flex-col lg:flex-row justify-center items-center">
+
                     <div className="w-full lg:w-[50rem] mt-10 lg:mt-0 h-full lg:ml-14 lg:h-[31rem]  mb-3 lg:mb-0 lg:mr-3 flex flex-col items-center lg:items-center pt-5 custom-shadow">
                         <h2 className="text-3xl font-bold mb-4 text-center md:text-center">
                             Booking Summary
@@ -199,9 +270,9 @@ export default function BikeBooking() {
                                             <span>12:9 pm</span>
                                         </p>*/}
 
-                                        <p className="text-lg font-medium flex flex-row justify-between">
-                                            <span className="pt-2">Pick up point</span>
-                                            <span>-{bookingData.district ? bookingData.district : ''}</span>
+                                        <p className="text-lg  flex flex-row justify-between">
+                                            <span className="pt-2 font-medium">Pick up point</span>
+                                            <span className="font-serif ">{bookingData.district ? bookingData.district : ''},{bookingCar[0]?.owner.localArea ? bookingCar[0].owner.localArea : ''}</span>
                                             {/*<select name="" id="" className="w-52 h-10 rounded-md bg-slate-300 ">
                                             <option className="text-lg font-medium">Select</option>
                                             <option className="text-lg font-medium">palakkad
@@ -209,14 +280,14 @@ export default function BikeBooking() {
                                         </select>*/}
                                         </p>
 
-                                        <p className="text-lg font-medium flex flex-row justify-between mt-2">
-                                            <span className="pt-1">Drop up point</span>
+                                        <p className="text-lg  flex flex-row justify-between mt-2">
+                                            <span className="pt-1 font-medium">Drop up point</span>
                                             {/*<select name="" id="" className="w-52 h-10 rounded-md bg-slate-300  ">
                                             <option className="text-lg font-medium">Select</option>
                                             <option className="text-lg font-medium">kalpatta
                                             </option>
                                         </select>*/}
-                                            <span>-{bookingData.district ? bookingData.district : ''}</span>
+                                            <span className="font-serif">{bookingData.district ? bookingData.district : ''},{bookingCar[0]?.owner.localArea ? bookingCar[0].owner.localArea : ''}</span>
                                         </p>
                                         <p className="text-lg font-medium flex flex-row justify-between pt-1">
                                             <span>Total Days</span>
@@ -260,10 +331,17 @@ export default function BikeBooking() {
                                             <span>120/km</span>
                                         </p>
                                     </div>
+
                                 </div>
+
                             </>
                             {/*))}*/}
+
                         </div>
+                        {/*<div className="w-[90%] h-10 bg-slate-100 flex justify-center text-gray-500">
+                            <p>You can pick up the vehicle at the specified location after 09:00 am on the given date and return the vehicle after 09:00 am on the given date. CONTACT: {bookingCar[0].owner?.phone} Or You Can Chat With him</p>
+                        </div>*/}
+
                     </div>
 
                     {/* Additional Section */}
@@ -285,15 +363,15 @@ export default function BikeBooking() {
                             </div>
                             <div className="flex justify-between pl-4 pr-4 mt-1">
                                 <p className="font-medium text-lg">Discount Amount</p>
-                                <p>₹:0</p>
+                                <p>{discount}</p>
                             </div>
                             {/*<div className="flex justify-between pl-4 pr-4 mt-1">
                             <p className="font-medium text-lg">Wallet Amount</p>
                             <p>₹:0</p>
                         </div>*/}
                             <div className="flex  pl-4 pr-4 mt-5 w-80 h-16 bg-lime-400 rounded-lg ml-8  justify-between items-center ">
-                                <input className='w-[15rem] ml-2 text-black placeholder:text-black p-1 rounded-md bg-slate-300 h-10  ' type="text" name="code" placeholder='Enter Coupon Code' />
-                                <button className="font-bold ml-3 mb-1 text-black">Apply</button>
+                                <input className='w-[15rem] ml-2 text-black placeholder:text-black p-1 rounded-md bg-slate-300 h-10  ' id='coupon' type="text" name="code" placeholder=' Enter Coupon Code' />
+                                <button className="font-bold ml-3 mb-1 text-black" onClick={() => { CouponApply('coupon') }} > Apply</button>
                             </div>
                         </div>
                         <div></div>
@@ -335,7 +413,7 @@ export default function BikeBooking() {
                                     onClick={() => {
                                         setCheckOut(true);
                                     }}
-                                >make payment </button>
+                                >Make payment </button>
 
                                 :
                                 < button
