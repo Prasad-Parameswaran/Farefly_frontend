@@ -5,7 +5,8 @@ import ScrollToBottom from "react-scroll-to-bottom";
 import io from "socket.io-client";
 import { getChat, saveChat } from '../../apiConfig/axiosConfig/axiosPartnerConfig'
 
-const socket = io.connect("http://localhost:4000");
+//const socket = io.connect("http://localhost:4000");
+const socket = io.connect("https://farflybackend.onrender.com");
 
 function Chat({ userId, bookingId }) {
     //const user = useSelector((state: any) => state.userAuth);

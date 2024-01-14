@@ -3,7 +3,8 @@ import axios from "axios";
 
 const clientAxiosIntercepter = (url) => {
     const instance = axios.create({
-        baseURL: `http://localhost:4000/`,
+        //baseURL: `http://localhost:4000/`,
+        baseURL: 'https://farflybackend.onrender.com',
     });
 
     instance.interceptors.request.use(
@@ -46,7 +47,9 @@ const clientAxiosIntercepter = (url) => {
 }
 const partnerAxiosIntercepter = (url) => {
     const instance = axios.create({
-        baseURL: `http://localhost:4000/partner/`,
+        //baseURL: `http://localhost:4000/partner/`,
+        baseURL: 'https://farflybackend.onrender.com/partner/',
+
     });
 
     instance.interceptors.request.use(
@@ -91,7 +94,9 @@ const partnerAxiosIntercepter = (url) => {
 
 const adminAxiosIntercepter = (url) => {
     const instance = axios.create({
-        baseURL: `http://localhost:4000/admin/`,
+        //baseURL: `http://localhost:4000/admin/`,
+        baseURL: 'https://farflybackend.onrender.com/admin/',
+
     });
 
     instance.interceptors.request.use(
