@@ -6,6 +6,8 @@ import io from "socket.io-client";
 import { getChat, saveChat } from '../../apiConfig/axiosConfig/axiosPartnerConfig'
 
 //const socket = io.connect("http://localhost:4000");
+const socket = io.connect("https://farflybackend.onrender.com");
+
 
 function Chat({ userId, bookingId }) {
     //const user = useSelector((state: any) => state.userAuth);
@@ -18,7 +20,7 @@ function Chat({ userId, bookingId }) {
 
     useEffect(() => {
         const chatTrigar = async () => {
-            const socket = io.connect("https://farflybackend.onrender.com");
+            //const socket = io.connect("https://farflybackend.onrender.com");
             socket.on("receiveMessage", async () => {
                 await getChat(bookingId).then((res) => {
                     setChatPerson(res.data.findChat[0].chat);
