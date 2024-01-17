@@ -23,6 +23,7 @@ function CarsList() {
     const [start, setStart] = useState('')
     const [end, setEnd] = useState('')
     const [defaultDistrict, setDefaultDistrict] = useState('')
+    const [skelton, setSkelton] = useState(false)
     const location = useLocation()
 
 
@@ -168,7 +169,7 @@ function CarsList() {
     }
 
     const findLocalArea = async (val) => {
-
+        setSkelton(true)
         const value = {
             localArea: val,
             pickUpDate: start,
@@ -176,13 +177,18 @@ function CarsList() {
 
         }
         const response = await findLocalAreaCar(value)
-        if (response.data.car) {
-            setCars(response.data.car)
-            setLocalArea(response.data.localArea)
-            setDitstrictSelect(true)
-        } else {
-            toast.error('something went wrong ')
-        }
+        setTimeout(() => {
+            if (response.data.car) {
+                setCars(response.data.car)
+                setLocalArea(response.data.localArea)
+                setDitstrictSelect(true)
+                setSkelton(false)
+
+            } else {
+                toast.error('something went wrong ')
+            }
+        }, 500);
+
 
     }
 
@@ -382,6 +388,49 @@ function CarsList() {
                                     <img src={loder} alt="" className='w-2/3 h-full ' />
 
                                 </div>
+                            </div>
+
+                        }
+
+                        {skelton &&
+
+                            <div role="status" className="max-w-md p-4 space-y-4 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 dark:border-gray-700">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                        <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                    </div>
+                                    <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+                                </div>
+                                <div className="flex items-center justify-between pt-4">
+                                    <div>
+                                        <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                        <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                    </div>
+                                    <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+                                </div>
+                                <div className="flex items-center justify-between pt-4">
+                                    <div>
+                                        <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                        <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                    </div>
+                                    <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+                                </div>
+                                <div className="flex items-center justify-between pt-4">
+                                    <div>
+                                        <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                        <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                    </div>
+                                    <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+                                </div>
+                                <div className="flex items-center justify-between pt-4">
+                                    <div>
+                                        <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                        <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                    </div>
+                                    <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+                                </div>
+                                <span className="sr-only">Loading...</span>
                             </div>
 
                         }
