@@ -432,10 +432,14 @@ function CarsList() {
                                     </div>
 
                                 </div>
-                                : <img src="https://www.freepik.com/free-vector/car-free-day-emblem-icon-isolated_88800071.htm#query=no%20car%20icon&position=8&from_view=keyword&track=ais&uuid=e1cb98ff-cbc2-4121-9458-5ed318448aad" className='w-44 h-44' alt="" />
+                                : null
 
                         ))
-                            : ''
+                            :
+                            <div className='w-full h-48'>
+                                < img src="https://www.freepik.com/free-vector/car-free-day-emblem-icon-isolated_88800071.htm#query=no%20car%20icon&position=8&from_view=keyword&track=ais&uuid=e1cb98ff-cbc2-4121-9458-5ed318448aad" className='w-44 h-44' alt="" />
+
+                            </div>
 
                         }
 
