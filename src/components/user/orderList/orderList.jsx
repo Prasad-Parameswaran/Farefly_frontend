@@ -17,6 +17,7 @@ function OrderList() {
     const [partnerChat, setPartnerChat] = useState('')
     const [bookingId, setBookingId] = useState('')
     const [chat, setChat] = useState(false)
+    const [chatList, setChatList] = useState(false)
 
 
     const handleView = (id) => {
@@ -60,6 +61,7 @@ function OrderList() {
             const response = await Bookinghistory()
             if (response.data.success) {
                 setBookingCars(response.data.bookingDetails)
+                setChatList(response.data.chatData)
                 //toast.success('there is your bookings ')
             } else {
                 toast.error('no bookings available...........')
@@ -215,14 +217,21 @@ function OrderList() {
                                                             </button>
                                                         </span >
                                                     </td >
-                                                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm" >
-                                                        <span
-                                                            className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight" >
-                                                            <button class="bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded" onClick={() => { hahdleChat(value._id, value.partner) }} >
+                                                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm relative">
+                                                        <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight ">
+                                                            <button class="bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded" onClick={() => { hahdleChat(value._id, value.partner) }}>
                                                                 chat
-                                                            </button>
-                                                        </span >
-                                                    </td >
+                                                            </button>   {
+                                                                chatList.some((data) => {
+                                                                    return data.PartnerMessage == true && value._id == data.bookingId
+                                                                })
+                                                                    ?
+                                                                    < span className="absolute top-0 right-0 bg-green-500 text-white px-3 py-3 rounded-full" ></span>
+                                                                    : null
+                                                            }
+                                                        </span>
+                                                    </td>
+
                                                 </tr >
                                             </tbody >
                                         ))

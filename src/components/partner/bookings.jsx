@@ -15,6 +15,7 @@ function Bookings() {
     const [userId, setUserId] = useState()
     const [bookingId, setBookingId] = useState()
     const [chat, setChat] = useState(false)
+    const [chatList, setChatList] = useState()
 
 
     const handleView = (id) => {
@@ -52,6 +53,7 @@ function Bookings() {
                 }
                 await statusHandle(data).then((res) => {
                     setBooking(res.data.bookingDetails)
+                    setChatList(res.data.chatData)
                 })
             }
 
@@ -93,6 +95,8 @@ function Bookings() {
         const data = async () => {
             await bookings().then((res) => {
                 setBooking(res.data.bookingDetails)
+                setChatList(res.data.chatData)
+                console.log(res.data.chatData)
             })
         }
         data()
@@ -255,6 +259,14 @@ function Bookings() {
                                                         <button class="bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded" onClick={() => { hahdleChat(value._id, value.user) }}  >
                                                             chat
                                                         </button>
+                                                        {
+                                                            chatList.some((data) => {
+                                                                return data.userMessage == true && value._id == data.bookingId
+                                                            })
+                                                                ?
+                                                                < span className="absolute top-0 right-0 bg-green-500 text-white px-3 py-3 rounded-full" ></span>
+                                                                : null
+                                                        }
                                                     </span >
                                                 </td>
                                             </tr>
@@ -289,7 +301,8 @@ function Bookings() {
                 </div >
                 : null
             }
-            {chat &&
+            {
+                chat &&
                 <>
                     <div className="w-full flex justify-end pr-48 ml-52 space-x-8" >
                         <button className="bg-transparent hover:bg-gray-500 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-gray-500 hover:border-transparent rounded justify-end" onClick={handleChatBackButton}>Back </button >

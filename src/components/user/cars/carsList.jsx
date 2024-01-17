@@ -5,6 +5,8 @@ import { carList, findDistrictCar, findLocalAreaCar, findHomeSearch, carListPost
 import toast from 'react-hot-toast'
 import _debounce from 'lodash/debounce';
 import { useLocation, useNavigate } from 'react-router-dom'
+import Map from '../../../components/user/map/map3'
+
 
 function CarsList() {
     const [cars, setCars] = useState([])
@@ -302,9 +304,9 @@ function CarsList() {
             </div >
 
             <div className='h-screen w-full flex '>
-                <div className='w-[30%] h-[300px] p-3 m-6  border shadow-lg shadow-lime-500/50'>
+                <div className='w-[30%] h-[300px] p-3 m-6  border shadow-lg shadow-lime-500/50 text-center '>
                     <>
-                        <div className=' flex flex-col  '>
+                        {/*<div className=' flex flex-col  '>
                             <div className='border border-t-2 p-2'>
                                 <h1 className='font-bold text-lg'>Pick up information</h1>
                                 <h1>FareFly, {data.district}  Road, {data.district} ,
@@ -323,7 +325,9 @@ function CarsList() {
                                 <h1 className='font-bold text-lg'>Total travel duration</h1>
                                 <h1>{daysDifference} Days 0 Hour 0 Min</h1>
                             </div>
-                        </div>
+                        </div>*/}
+                        <h1>Car Locaion</h1>
+                        <Map />
                     </>
                     <div className='w-[100%] h-[200px] mt-24  border shadow-lg shadow-gray-500/100 rounded-xl'>
                         <label for="default" class="block mb-2 text-gray-900 dark:text-black font-bold text-lg text-center pt-2 bg-gray-200 ">FILTER CARS</label>

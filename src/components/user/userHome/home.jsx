@@ -8,7 +8,7 @@ import { carList } from '../../../apiConfig/axiosConfig/axiosClientConfig'
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import Slider from 'react-slick';
-import Map from '../../user/map/map'
+//import Map from '../../user/map/map'
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
@@ -202,9 +202,9 @@ function Home() {
                         </div >
 
                     </div >
-                    <div className='w-full h-80'>
+                    {/*<div className='w-full h-80'>
                         <Map />
-                    </div>
+                    </div>*/}
                 </div >
 
 
