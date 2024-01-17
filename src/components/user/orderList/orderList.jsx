@@ -20,6 +20,17 @@ function OrderList() {
     const [chatList, setChatList] = useState(false)
 
 
+    const lastItemIndex = currentPage * itemsPerPage;
+    const firstIndex = lastItemIndex - itemsPerPage;
+    const thisPageItems = setBookingCars.slice(firstIndex, lastItemIndex);
+
+    const pages = [];
+    for (let i = 1; i <= Math.ceil(carList.length / itemsPerPage); i++) {
+        pages.push(i);
+    }
+
+
+
     const handleView = (id) => {
         setView(true)
         setCars(false)
@@ -103,7 +114,7 @@ function OrderList() {
                                 </div >
                             </div >
                         </div >
-                        <div className="lg-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto h-[500px] ">
+                        <div className="lg-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto h-[400px] ">
                             <div className="inline-block min-w-full shadow rounded-lg overflow-hidden border border-lime-500">
                                 <table className="min-w-full leading-normal">
                                     <thead>
@@ -147,8 +158,8 @@ function OrderList() {
                                             </th >
                                         </tr >
                                     </thead >
-                                    {bookingCars ?
-                                        bookingCars.map((value, index) => (
+                                    {thisPageItems ?
+                                        thisPageItems.map((value, index) => (
                                             //value.status != 'Cancel' &&
                                             < tbody key={index} >
                                                 < tr >
@@ -239,13 +250,32 @@ function OrderList() {
                                     }
                                 </table >
 
-
-                                <div
-                                    className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between          " >
-                                    {/*<span className="text-xs xs:text-sm text-gray-900" >
+                                <div className='flex justify-center'>
+                                    {
+                                        pages.slice(
+                                            Math.max(currentPage - 2, 0),
+                                            Math.min(currentPage + 1, pages.length)
+                                        )
+                                            .map((page, index) => (
+                                                <button
+                                                    onClick={() => setCurrentPage(page)}
+                                                    key={index}
+                                                    className={`font-extrabold p-2 ${currentPage === page
+                                                        ? "text-4xl text-sky-300"
+                                                        : "text-xl text-green-600"
+                                                        }`}
+                                                >
+                                                    {page}
+                                                </button>
+                                            ))
+                                    }
+                                </div>
+                                {/*<div
+                                    className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between          " >*/}
+                                {/*<span className="text-xs xs:text-sm text-gray-900" >
                                     Showing 1 to 4 of 50 Entries
                                 </span >*/}
-                                    <div className="inline-flex mt-2 xs:mt-0 gap-3" >
+                                {/*<div className="inline-flex mt-2 xs:mt-0 gap-3" >
                                         <button
                                             className="text-sm text-indigo-50 transition duration-150 hover:bg-lime-900 bg-lime-600 font-semibold py-2 px-4 rounded-l" >
                                             Prev
@@ -255,7 +285,7 @@ function OrderList() {
                                             Next
                                         </button >
                                     </div >
-                                </div >
+                                </div >*/}
                             </div >
                         </div >
                     </div >
