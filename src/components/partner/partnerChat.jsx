@@ -7,7 +7,7 @@ import { getChat, saveChat } from '../../apiConfig/axiosConfig/axiosPartnerConfi
 
 //const socket = io.connect("http://localhost:4000");
 //const socket = io.connect("https://farflybackend.onrender.com");
-const socket = io.connect("https://farefly.de-vip.online");
+const socket = io.connect("https://farefly.de-vip.online/");
 
 
 function Chat({ userId, bookingId }) {

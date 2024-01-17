@@ -49,7 +49,7 @@ function Otp() {
         }
         //await axios.post('http://localhost:4000/otpVarify', { user, Userotp, otp }).then((response) => {
         //await axios.post('https://farflybackend.onrender.com/otpVarify', { user, Userotp, otp }).then((response) => {
-        await axios.post('https://farefly.de-vip.online/otpVarify', { user, Userotp, otp }).then((response) => {
+        await axios.post('https://farefly.de-vip.online/otpVarify/', { user, Userotp, otp }).then((response) => {
             if (response.data.success) {
                 navigate('/');
             } else {

@@ -5,7 +5,7 @@ const clientAxiosIntercepter = (url) => {
     const instance = axios.create({
         //baseURL: `http://localhost:4000/`,
         //baseURL: 'https://farflybackend.onrender.com',
-        baseURL: 'https://farefly.de-vip.online',
+        baseURL: 'https://farefly.de-vip.online/',
     });
 
     instance.interceptors.request.use(
