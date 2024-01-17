@@ -103,7 +103,7 @@ function OrderList() {
                                 </div >
                             </div >
                         </div >
-                        <div className="lg-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto h-[600px] ">
+                        <div className="lg-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto h-[500px] ">
                             <div className="inline-block min-w-full shadow rounded-lg overflow-hidden border border-lime-500">
                                 <table className="min-w-full leading-normal">
                                     <thead>
