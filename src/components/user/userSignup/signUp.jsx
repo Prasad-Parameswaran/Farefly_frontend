@@ -66,7 +66,7 @@ const SignUp = () => {
 
             //await axios.post('http://localhost:4000/signup', { email, phone }).then((response) => {
             //await axios.post('https://farflybackend.onrender.com/signup', { email, phone }).then((response) => {
-            await axios.post('https://farefly.de-vip.online/signup/', { email, phone }).then((response) => {
+            await axios.post('https://farefly.de-vip.online/signup', { email, phone }).then((response) => {
                 if (response.data.success) {
                     navigate('/otp', { state: { userDetails: userDetails, otp: response.data.otp } })
                 } else {
