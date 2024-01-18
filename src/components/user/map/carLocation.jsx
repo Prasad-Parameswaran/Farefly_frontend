@@ -9,7 +9,7 @@ const Map = ({ location }) => {
     const Mapref = useRef();
 
     useEffect(() => {
-        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${location}.json?access_token=pk.eyJ1IjoibW9oZGlyZmFkIiwiYSI6ImNsZzNwaWFncTBocHozb28zb3YzcHpvejEifQ.CJcMCCKk4SKR6JBo2-JNnQ`;
+        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/kannur.json?access_token=pk.eyJ1IjoibW9oZGlyZmFkIiwiYSI6ImNsZzNwaWFncTBocHozb28zb3YzcHpvejEifQ.CJcMCCKk4SKR6JBo2-JNnQ`;
         fetch(url)
             .then((response) => response.json())
             .then((data) => {
