@@ -9,7 +9,7 @@ const Map = ({ location }) => {
     const Mapref = useRef();
 
     useEffect(() => {
-        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/kannur.json?access_token=pk.eyJ1IjoibW9oZGlyZmFkIiwiYSI6ImNsZzNwaWFncTBocHozb28zb3YzcHpvejEifQ.CJcMCCKk4SKR6JBo2-JNnQ`;
+        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/kannur.json?access_token=pk.eyJ1IjoibW9oZGlyZmFkIiwiYSI6ImNscmpkYW91bjAyNmgybGswOWM0dnBhN2UifQ.LqhoTnHN03JQ1PpyLu-t1g`;
         fetch(url)
             .then((response) => response.json())
             .then((data) => {
@@ -40,7 +40,7 @@ const Map = ({ location }) => {
             {coordinates && (
                 <ReactMapGL
                     ref={Mapref}
-                    mapboxAccessToken='pk.eyJ1IjoibW9oZGlyZmFkIiwiYSI6ImNsZzNwaWFncTBocHozb28zb3YzcHpvejEifQ.CJcMCCKk4SKR6JBo2-JNnQ'
+                    mapboxAccessToken='pk.eyJ1IjoibW9oZGlyZmFkIiwiYSI6ImNscmpkYW91bjAyNmgybGswOWM0dnBhN2UifQ.LqhoTnHN03JQ1PpyLu-t1g'
                     containerStyle={{
                         height: '100%',
                         width: '100%'
