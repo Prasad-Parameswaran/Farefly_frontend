@@ -53,7 +53,8 @@ const Map = () => {
         });
         console.log("Map loaded successfully!");
 
-        map.on("load", async () => {
+        //map.on("load", async () => {
+        const mapload = async () => {
 
             const bounds = new mapboxgl.LngLatBounds();
             if (pickupCoordinates && dropoffCoordinates) {
@@ -96,7 +97,9 @@ const Map = () => {
                 bounds.extend(dropoffCoordinates);
             }
             addBoundsToMap(map, bounds);
-        });
+        }
+        mapload()
+        //});
 
     }, [pickupCoordinates, dropoffCoordinates]);
 
