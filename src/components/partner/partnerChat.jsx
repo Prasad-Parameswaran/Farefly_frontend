@@ -5,9 +5,9 @@ import ScrollToBottom from "react-scroll-to-bottom";
 import io from "socket.io-client";
 import { getChat, saveChat } from '../../apiConfig/axiosConfig/axiosPartnerConfig'
 
-//const socket = io.connect("http://localhost:4000");
+const socket = io.connect("http://localhost:4000");
 //const socket = io.connect("https://farflybackend.onrender.com");
-const socket = io.connect("https://farefly.de-vip.online");
+//const socket = io.connect("https://farefly.de-vip.online");
 
 
 function Chat({ userId, bookingId }) {
@@ -61,8 +61,8 @@ function Chat({ userId, bookingId }) {
 
     return (
         <div className="container mx-auto">
-            <div className="min-w-full border rounded lg:grid lg:grid-cols-3">
-                <div className="border-r border-gray-300 lg:col-span-1">
+            <div className="min-w-full border rounded lg:grid ">
+                {/*<div className="border-r border-gray-300 lg:col-span-1">
                     <div className="mx-3 my-3">
                         <div className="relative text-gray-600">
                             <span className="absolute inset-y-0 left-0 flex items-center pl-2">
@@ -110,7 +110,7 @@ function Chat({ userId, bookingId }) {
                             </a>
                         </li>
                     </ul>
-                </div>
+                </div>*/}
                 <div className="hidden lg:col-span-2 lg:block">
                     <div className="w-full">
                         <div className="relative bg-gray-100 flex items-center p-3 border-b border-gray-300">

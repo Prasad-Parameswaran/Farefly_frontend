@@ -261,10 +261,10 @@ function Bookings() {
                                                         </button>
                                                         {
                                                             chatList.some((data) => {
-                                                                return data.userMessage == true && value._id == data.bookingId
+                                                                return data.UserMessage == true && value._id == data.bookingId
                                                             })
                                                                 ?
-                                                                < span className="absolute top-0 right-0 bg-green-500 text-white px-3 py-3 rounded-full" ></span>
+                                                                < span className="absolute top-0 right-0 bg-orange-500 text-white px-.5 py-.5 rounded-full p-0.5" >New</span>
                                                                 : null
                                                         }
                                                     </span >

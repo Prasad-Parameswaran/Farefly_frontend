@@ -3,9 +3,9 @@ import axios from "axios";
 
 const clientAxiosIntercepter = (url) => {
     const instance = axios.create({
-        //baseURL: `http://localhost:4000/`,
+        baseURL: `http://localhost:4000/`,
         //baseURL: 'https://farflybackend.onrender.com',
-        baseURL: 'https://farefly.de-vip.online',
+        //baseURL: 'https://farefly.de-vip.online',
     });
 
     instance.interceptors.request.use(
@@ -48,9 +48,9 @@ const clientAxiosIntercepter = (url) => {
 }
 const partnerAxiosIntercepter = (url) => {
     const instance = axios.create({
-        //baseURL: `http://localhost:4000/partner/`,
+        baseURL: `http://localhost:4000/partner/`,
         //baseURL: 'https://farflybackend.onrender.com/partner/',
-        baseURL: 'https://farefly.de-vip.online/partner',
+        //baseURL: 'https://farefly.de-vip.online/partner',
 
     });
 
@@ -96,9 +96,9 @@ const partnerAxiosIntercepter = (url) => {
 
 const adminAxiosIntercepter = (url) => {
     const instance = axios.create({
-        //baseURL: `http://localhost:4000/admin/`,
+        baseURL: `http://localhost:4000/admin/`,
         //baseURL: 'https://farflybackend.onrender.com/admin/',
-        baseURL: 'https://farefly.de-vip.online/admin',
+        //baseURL: 'https://farefly.de-vip.online/admin',
 
     });
 
