@@ -57,7 +57,7 @@ const Map = () => {
         });
 
         // Listen to the "load" event outside the "load" block
-        map.on("mousemove", async () => {
+        map.on("load", async () => {
             console.log('llllllllllllllkoooooooooooooooooiiiiiiiiiii')
             const bounds = new mapboxgl.LngLatBounds();
 
