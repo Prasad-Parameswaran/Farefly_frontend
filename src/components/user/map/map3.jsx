@@ -1,13 +1,34 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import mapboxgl from "mapbox-gl";
 import axios from "axios";
 import "mapbox-gl/dist/mapbox-gl.css";
+import { LocationContext } from "./locationContext";
 
-mapboxgl.accessToken = 'pk.eyJ1IjoibW9oZGlyZmFkIiwiYSI6ImNsZzNwaWFncTBocHozb28zb3YzcHpvejEifQ.CJcMCCKk4SKR6JBo2-JNnQ';
+
+mapboxgl.accessToken = 'pk.eyJ1IjoibW9oZGlyZmFkIiwiYSI6ImNsZzNwaWFncTBocHozb28zb3YzcHpvejEifQ.CJcMCCKk4SKR6JBo2-JNnQ'
+//let accessToken = 'pk.eyJ1Ijoic2NvdGhpcyIsImEiOiJjaWp1Y2ltYmUwMDBicmJrdDQ4ZDBkaGN4In0.sbihZCZJ56-fsFNKHXF8YQ'
 
 const Map = () => {
+
+    //const contextValues = useContext(LocationContext);
     const pickupCoordinates = [76.2673, 9.9312]; // Bangalore, India
     const dropoffCoordinates = [76.9366, 8.5241]; // Sample dropoff coordinates
+
+    // Check the values here
+    //const { pickupCoordinates, dropoffCoordinates } = contextValues;
+    console.log(pickupCoordinates, dropoffCoordinates, "llllllll");
+
+    //const getDirection = async (pickup, dropoff) => {
+    //    console.log(pickup, dropoff, 'this is url ................................')
+
+    //    let url = `https://api.mapbox.com/directions/v5/mapbox/driving/${pickup[0]},${pickup[1]};${dropoff[0]},${dropoff[1]}?alternatives=true&geometries=geojson&language=en&overview=simplified&steps=true&access_token=${mapboxgl.accessToken}`;
+
+
+    //    const result = await axios.get(url)
+    //    console.log(result.data?.routes[0].geometry)
+    //    const data = result.data?.routes[0].geometry
+    //    return data;
+    //};
 
     const getDirection = async (pickup, dropoff) => {
         try {
@@ -15,30 +36,35 @@ const Map = () => {
 
             const result = await axios.get(url);
             console.log(result.data?.routes[0].geometry);
-            return result.data?.routes[0].geometry;
+            const data = result.data?.routes[0].geometry;
+            return data;
         } catch (error) {
             console.error("Error fetching directions:", error);
+            // Handle the error as needed
             return null;
         }
     };
 
+
     useEffect(() => {
-        const initializeMap = async () => {
-            const map = new mapboxgl.Map({
-                container: 'map',
-                style: 'mapbox://styles/mapbox/streets-v12',
-                center: [76.6413, 10.1632],
-                zoom: 7,
-                maxZoom: 15,
-            });
+        //mapboxgl.accessToken = 'pk.eyJ1IjoibW9oZGlyZmFkIiwiYSI6ImNsZzNwaWFncTBocHozb28zb3YzcHpvejEifQ.CJcMCCKk4SKR6JBo2-JNnQ'
 
-            map.on("load", async () => {
-                const bounds = new mapboxgl.LngLatBounds();
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v12',
+            center: [76.6413, 10.1632],
+            zoom: 7,
+            maxZoom: 15,
+        });
+        map.on("load", async () => {
+            const bounds = new mapboxgl.LngLatBounds();
 
-                if (pickupCoordinates && dropoffCoordinates) {
-                    const result = await getDirection(pickupCoordinates, dropoffCoordinates);
+            if (pickupCoordinates && dropoffCoordinates) {
 
-                    if (result) {
+                await getDirection(pickupCoordinates, dropoffCoordinates).then(
+                    (result) => {
+                        console.log(result)
+
                         const routeLayer = {
                             id: "route",
                             type: "line",
@@ -47,7 +73,8 @@ const Map = () => {
                                 data: {
                                     type: "Feature",
                                     properties: {},
-                                    geometry: result,
+                                    geometry: result
+                                    ,
                                 },
                             },
                             layout: {
@@ -61,32 +88,32 @@ const Map = () => {
                         };
                         map.addLayer(routeLayer);
                     }
-                }
+                );
+            }
+            if (pickupCoordinates) {
+                addToMap(map, pickupCoordinates);
+                bounds.extend(pickupCoordinates);
+            }
 
-                if (pickupCoordinates) {
-                    addToMap(map, pickupCoordinates);
-                    bounds.extend(pickupCoordinates);
-                }
+            if (dropoffCoordinates) {
+                addToMap(map, dropoffCoordinates);
+                bounds.extend(dropoffCoordinates);
+            }
+            addBoundsToMap(map, bounds);
+        });
 
-                if (dropoffCoordinates) {
-                    addToMap(map, dropoffCoordinates);
-                    bounds.extend(dropoffCoordinates);
-                }
-
-                addBoundsToMap(map, bounds);
-            });
-        };
-
-        initializeMap();
     }, [pickupCoordinates, dropoffCoordinates]);
 
     const addToMap = (map, coordinates) => {
-        new mapboxgl.Marker().setLngLat(coordinates).addTo(map);
+        // eslint-disable-next-line no-unused-vars
+        const marker = new mapboxgl.Marker().setLngLat(coordinates).addTo(map);
     };
 
     const addBoundsToMap = (map, bounds) => {
         map.fitBounds(bounds, { padding: 20 });
     };
+
+
 
     return <div id="map" style={{ height: '200px', width: '100%', border: '2px' }}></div>;
 };
