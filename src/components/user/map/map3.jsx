@@ -17,18 +17,33 @@ const Map = () => {
     // Check the values here
     //const { pickupCoordinates, dropoffCoordinates } = contextValues;
     console.log(pickupCoordinates, dropoffCoordinates, "llllllll");
+
+    //const getDirection = async (pickup, dropoff) => {
+    //    console.log(pickup, dropoff, 'this is url ................................')
+
+    //    let url = `https://api.mapbox.com/directions/v5/mapbox/driving/${pickup[0]},${pickup[1]};${dropoff[0]},${dropoff[1]}?alternatives=true&geometries=geojson&language=en&overview=simplified&steps=true&access_token=${mapboxgl.accessToken}`;
+
+
+    //    const result = await axios.get(url)
+    //    console.log(result.data?.routes[0].geometry)
+    //    const data = result.data?.routes[0].geometry
+    //    return data;
+    //};
+
     const getDirection = async (pickup, dropoff) => {
-        console.log(pickup, dropoff, 'this is url ................................')
+        try {
+            const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${pickup[0]},${pickup[1]};${dropoff[0]},${dropoff[1]}?alternatives=true&geometries=geojson&language=en&overview=simplified&steps=true&access_token=${mapboxgl.accessToken}`;
 
-        let url = `https://api.mapbox.com/directions/v5/mapbox/driving/${pickup[0]},${pickup[1]};${dropoff[0]},${dropoff[1]}?alternatives=true&geometries=geojson&language=en&overview=simplified&steps=true&access_token=${mapboxgl.accessToken}`;
-
-
-        const result = await axios.get(url)
-        console.log(result.data?.routes[0].geometry)
-        const data = result.data?.routes[0].geometry
-        return data;
+            const result = await axios.get(url);
+            console.log(result.data?.routes[0].geometry);
+            const data = result.data?.routes[0].geometry;
+            return data;
+        } catch (error) {
+            console.error("Error fetching directions:", error);
+            // Handle the error as needed
+            return null;
+        }
     };
-
 
 
     useEffect(() => {
