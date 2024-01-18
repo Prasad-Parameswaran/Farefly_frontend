@@ -44,6 +44,7 @@ const Map = () => {
 
 
     useEffect(() => {
+        // Create a new map instance
         const map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/streets-v12',
@@ -51,42 +52,49 @@ const Map = () => {
             zoom: 7,
             maxZoom: 15,
         });
-        console.log("Map loaded successfully!");
 
-        //map.on("load", async () => {
-        const mapload = async () => {
+        // Attach the "load" event handler
+        map.on("load", async () => {
+            console.log("Map loaded successfully!");
 
             const bounds = new mapboxgl.LngLatBounds();
-            if (pickupCoordinates && dropoffCoordinates) {
-                await getDirection(pickupCoordinates, dropoffCoordinates).then(
-                    (result) => {
-                        console.log(result)
 
-                        const routeLayer = {
-                            id: "route",
-                            type: "line",
-                            source: {
-                                type: "geojson",
-                                data: {
-                                    type: "Feature",
-                                    properties: {},
-                                    geometry: result
-                                    ,
-                                },
-                            },
-                            layout: {
-                                "line-join": "round",
-                                "line-cap": "round",
-                            },
-                            paint: {
-                                "line-color": "#888",
-                                "line-width": 8,
-                            },
-                        };
-                        map.addLayer(routeLayer);
-                    }
-                );
+            // Wait for the style to finish loading
+            if (!map.isStyleLoaded()) {
+                return;
             }
+
+            if (pickupCoordinates && dropoffCoordinates) {
+                try {
+                    const result = await getDirection(pickupCoordinates, dropoffCoordinates);
+
+                    const routeLayer = {
+                        id: "route",
+                        type: "line",
+                        source: {
+                            type: "geojson",
+                            data: {
+                                type: "Feature",
+                                properties: {},
+                                geometry: result,
+                            },
+                        },
+                        layout: {
+                            "line-join": "round",
+                            "line-cap": "round",
+                        },
+                        paint: {
+                            "line-color": "#888",
+                            "line-width": 8,
+                        },
+                    };
+
+                    map.addLayer(routeLayer);
+                } catch (error) {
+                    console.error("Error loading route:", error);
+                }
+            }
+
             if (pickupCoordinates) {
                 addToMap(map, pickupCoordinates);
                 bounds.extend(pickupCoordinates);
@@ -96,10 +104,9 @@ const Map = () => {
                 addToMap(map, dropoffCoordinates);
                 bounds.extend(dropoffCoordinates);
             }
+
             addBoundsToMap(map, bounds);
-        }
-        mapload()
-        //});
+        });
 
     }, [pickupCoordinates, dropoffCoordinates]);
 
