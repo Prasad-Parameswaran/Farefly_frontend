@@ -109,8 +109,8 @@ const Map = () => {
         });
 
         console.log("Map loaded successfully!");
-    }, [pickupCoordinates, dropoffCoordinates]);
-
+    }, []);
+    //dropoffCoordinates, pickupCoordinates
 
     const addToMap = (map, coordinates) => {
         // eslint-disable-next-line no-unused-vars
