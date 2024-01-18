@@ -52,7 +52,7 @@ const Map = () => {
 
         const map = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/mapbox/navigation-night-v1',
+            style: 'mapbox://styles/mapbox/outdoors-v12',
             center: [76.6413, 10.1632],
             zoom: 7,
             maxZoom: 15,
