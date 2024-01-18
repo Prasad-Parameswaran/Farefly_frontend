@@ -54,7 +54,7 @@ const Map = () => {
             container: 'map',
             style: 'mapbox://styles/mapbox/satellite-streets-v12',
             center: [76.6413, 10.1632],
-            zoom: 7,
+            zoom: 15,
             maxZoom: 15,
         });
 
