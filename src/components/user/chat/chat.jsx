@@ -25,13 +25,14 @@ function Chat({ partnerChat, bookingIdUser }) {
             socket.on("receiveMessage", async () => {
                 await getChat(bookingIdUser).then((res) => {
                     setChatPerson(res.data.findChat[0].chat);
+                    setUserdetails(res.data.findChat[0].partnerId);
                 });
             });
 
-            await getChat(bookingIdUser).then((res) => {
-                setUserdetails(res.data.findChat[0].partnerId);
-                setChatPerson(res.data.findChat[0].chat);
-            });
+            //await getChat(bookingIdUser).then((res) => {
+            //    setUserdetails(res.data.findChat[0].partnerId);
+            //    setChatPerson(res.data.findChat[0].chat);
+            //});
         }
         chatTrigar()
 
