@@ -51,8 +51,9 @@ const Map = () => {
             zoom: 7,
             maxZoom: 15,
         });
+        console.log("Map loaded successfully!");
+
         map.on("load", async () => {
-            console.log("Map loaded successfully!");
 
             const bounds = new mapboxgl.LngLatBounds();
             if (pickupCoordinates && dropoffCoordinates) {
