@@ -34,7 +34,7 @@ const Map = () => {
             const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${pickup[0]},${pickup[1]};${dropoff[0]},${dropoff[1]}?alternatives=true&geometries=geojson&language=en&overview=simplified&steps=true&access_token=${mapboxgl.accessToken}`;
 
             const result = await axios.get(url);
-            console.log(result.data?.routes[0].geometry.coordinates
+            console.log(result.data?.routes[0].geometry.coordinates, 'tjookokosjsj'
             );
             const data = result.data?.routes[0].geometry.coordinates
                 ;
