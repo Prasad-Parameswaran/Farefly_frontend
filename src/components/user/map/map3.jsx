@@ -5,6 +5,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { LocationContext } from "./locationContext";
 
 
+
 mapboxgl.accessToken = 'pk.eyJ1IjoibW9oZGlyZmFkIiwiYSI6ImNsZzNwaWFncTBocHozb28zb3YzcHpvejEifQ.CJcMCCKk4SKR6JBo2-JNnQ'
 //let accessToken = 'pk.eyJ1Ijoic2NvdGhpcyIsImEiOiJjaWp1Y2ltYmUwMDBicmJrdDQ4ZDBkaGN4In0.sbihZCZJ56-fsFNKHXF8YQ'
 
@@ -51,42 +52,42 @@ const Map = () => {
             zoom: 7,
             maxZoom: 15,
         });
-        console.log("Map loaded successfully!");
 
-        //map.on("load", async () => {
-        const mapload = async () => {
-
+        // Listen to the "load" event outside the "load" block
+        map.on("load", async () => {
             const bounds = new mapboxgl.LngLatBounds();
-            if (pickupCoordinates && dropoffCoordinates) {
-                await getDirection(pickupCoordinates, dropoffCoordinates).then(
-                    (result) => {
-                        console.log(result)
 
-                        const routeLayer = {
-                            id: "route",
-                            type: "line",
-                            source: {
-                                type: "geojson",
-                                data: {
-                                    type: "Feature",
-                                    properties: {},
-                                    geometry: result
-                                    ,
-                                },
+            if (pickupCoordinates && dropoffCoordinates) {
+                try {
+                    const result = await getDirection(pickupCoordinates, dropoffCoordinates);
+                    console.log(result);
+
+                    const routeLayer = {
+                        id: "route",
+                        type: "line",
+                        source: {
+                            type: "geojson",
+                            data: {
+                                type: "Feature",
+                                properties: {},
+                                geometry: result,
                             },
-                            layout: {
-                                "line-join": "round",
-                                "line-cap": "round",
-                            },
-                            paint: {
-                                "line-color": "#888",
-                                "line-width": 8,
-                            },
-                        };
-                        map.addLayer(routeLayer);
-                    }
-                );
+                        },
+                        layout: {
+                            "line-join": "round",
+                            "line-cap": "round",
+                        },
+                        paint: {
+                            "line-color": "#888",
+                            "line-width": 8,
+                        },
+                    };
+                    map.addLayer(routeLayer);
+                } catch (error) {
+                    console.error("Error adding route layer:", error);
+                }
             }
+
             if (pickupCoordinates) {
                 addToMap(map, pickupCoordinates);
                 bounds.extend(pickupCoordinates);
@@ -96,12 +97,13 @@ const Map = () => {
                 addToMap(map, dropoffCoordinates);
                 bounds.extend(dropoffCoordinates);
             }
-            addBoundsToMap(map, bounds);
-        }
-        mapload()
-        //});
 
+            addBoundsToMap(map, bounds);
+        });
+
+        console.log("Map loaded successfully!");
     }, [pickupCoordinates, dropoffCoordinates]);
+
 
     const addToMap = (map, coordinates) => {
         // eslint-disable-next-line no-unused-vars
