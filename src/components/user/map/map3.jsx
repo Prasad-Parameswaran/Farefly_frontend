@@ -57,12 +57,10 @@ const Map = () => {
             zoom: 7,
             maxZoom: 15,
         });
-        map.on('load', () => {
-            console.log('Map has fully loaded!');
-        });
+
 
         // Listen to the "load" event outside the "load" block
-        map.on("mousemove", async () => {
+        map.on("render", async () => {
             console.log('llllllllllllllkoooooooooooooooooiiiiiiiiiii')
             const bounds = new mapboxgl.LngLatBounds();
 
