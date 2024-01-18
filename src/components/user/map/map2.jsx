@@ -157,8 +157,8 @@ import Map1 from './carLocation'
 
 function map2() {
     return (
-        //<Map />
-        <Map1 />
+        <Map />
+        //<Map1 />
     )
 }
 

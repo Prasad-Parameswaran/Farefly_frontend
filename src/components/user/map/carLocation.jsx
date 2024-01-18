@@ -33,9 +33,6 @@ const Map = ({ location }) => {
     console.log(coordinates, "11111111111111111")
 
     return (
-
-
-
         <div className='h-[500px] w-[100%] ' >
             {coordinates && (
                 <ReactMapGL
