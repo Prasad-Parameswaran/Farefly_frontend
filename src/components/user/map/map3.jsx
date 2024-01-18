@@ -36,7 +36,7 @@ const Map = () => {
             const result = await axios.get(url);
             console.log(result.data?.routes[0].geometry.coordinates, 'tjookokosjsj'
             );
-            const data = result.data?.routes[0].geometry
+            const data = result.data?.routes[0].geometry.coordinates
                 ;
             return data;
         } catch (error) {
