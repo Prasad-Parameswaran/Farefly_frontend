@@ -40,7 +40,7 @@ const Map = () => {
     useEffect(() => {
         const map = new mapboxgl.Map({
             container: "map",
-            style: "mapbox://styles/mapbox/navigation-day-v1",
+            style: "mapbox://styles/mapbox/satellite-v9",
             center: [76.6413, 10.1632],
             zoom: 7,
         });
@@ -100,7 +100,7 @@ const Map = () => {
 
 
 
-    return <div id="map" style={{ height: '400px', width: '100%', border: '2px' }}></div>;
+    return <div id="map" style={{ height: '200px', width: '100%', border: '2px' }}></div>;
 };
 
 export default Map;
