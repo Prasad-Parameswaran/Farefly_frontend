@@ -18,7 +18,7 @@ const Map = () => {
 
 
     //const { pickupCoordinates, dropoffCoordinates } = contextValues;
-    console.log(pickupCoordinates, dropoffCoordinates, "llllllll");
+    console.log(pickupCoordinates);
 
     //const getDirection = async (pickup, dropoff) => {
     //    console.log(pickup, dropoff, 'this is url ................................')
@@ -29,72 +29,53 @@ const Map = () => {
     //    return data;
     //};
 
-    const getDirection = async (pickup, dropoff) => {
-        try {
-            const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${pickup[0]},${pickup[1]};${dropoff[0]},${dropoff[1]}?alternatives=true&geometries=geojson&language=en&overview=simplified&steps=true&access_token=${mapboxgl.accessToken}`;
-
-            const result = await axios.get(url);
-            console.log(result.data?.routes[0].geometry.coordinates, 'tjookokosjsj'
-            );
-            const data = result.data?.routes[0].geometry.coordinates
-                ;
-            return data;
-        } catch (error) {
-            console.error("Error fetching directions:", error);
-            // Handle the error as needed
-            return null;
-        }
+    const getDirection = async (pickupCoordinates, dropoffCoordinates) => {
+        const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${pickupCoordinates[0]},${pickupCoordinates[1]};${dropoffCoordinates[0]},${dropoffCoordinates[1]}?alternatives=true&geometries=geojson&language=en&overview=simplified&steps=true&access_token=${mapboxgl.accessToken}`;
+        const result = await axios.get(url);
+        console.log(result)
+        return result;
     };
 
 
     useEffect(() => {
-        mapboxgl.accessToken = 'pk.eyJ1IjoibW9oZGlyZmFkIiwiYSI6ImNscmpkYW91bjAyNmgybGswOWM0dnBhN2UifQ.LqhoTnHN03JQ1PpyLu-t1g'
-
         const map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/satellite-streets-v12',
+            container: "map",
+            style: "mapbox://styles/mapbox/streets-v12",
             center: [76.6413, 10.1632],
             zoom: 7,
-            maxZoom: 15,
         });
 
-
-        // Listen to the "load" event outside the "load" block
-        map.on('load', async () => {
-            console.log('llllllllllllllkoooooooooooooooooiiiiiiiiiii')
+        map.on("load", async () => {
             const bounds = new mapboxgl.LngLatBounds();
 
             if (pickupCoordinates && dropoffCoordinates) {
-                try {
-                    const result = await getDirection(pickupCoordinates, dropoffCoordinates);
-                    console.log(result);
 
-                    const routeLayer = {
-                        id: "route",
-                        type: "line",
-                        source: {
-                            type: "geojson",
-                            data: {
-                                type: "Feature",
-                                properties: {},
-                                geometry: result,
+                await getDirection(pickupCoordinates, dropoffCoordinates).then(
+                    (result) => {
+                        const routeLayer = {
+                            id: "route",
+                            type: "line",
+                            source: {
+                                type: "geojson",
+                                data: {
+                                    type: "Feature",
+                                    properties: {},
+                                    geometry: result.data.routes[0].geometry,
+                                },
                             },
-                        },
-                        layout: {
-                            "line-join": "round",
-                            "line-cap": "round",
-                        },
-                        paint: {
-                            "line-color": "#888",
-                            "line-width": 8,
-                        },
-                    };
-                    map.addLayer(routeLayer);
-                } catch (error) {
-                    console.error("Error adding route layer:", error);
-                }
+                            layout: {
+                                "line-join": "round",
+                                "line-cap": "round",
+                            },
+                            paint: {
+                                "line-color": "#888",
+                                "line-width": 8,
+                            },
+                        };
+                        map.addLayer(routeLayer);
+                    }
+                );
             }
-
             if (pickupCoordinates) {
                 addToMap(map, pickupCoordinates);
                 bounds.extend(pickupCoordinates);
@@ -104,13 +85,9 @@ const Map = () => {
                 addToMap(map, dropoffCoordinates);
                 bounds.extend(dropoffCoordinates);
             }
-
             addBoundsToMap(map, bounds);
         });
-
-        console.log("Map loaded successfully!");
-    }, []);
-    //dropoffCoordinates, pickupCoordinates
+    }, [pickupCoordinates, dropoffCoordinates]);
 
     const addToMap = (map, coordinates) => {
         // eslint-disable-next-line no-unused-vars
