@@ -100,7 +100,7 @@ const Map = () => {
 
 
 
-    return <div id="map" style={{ height: '200px', width: '100%', border: '2px' }}></div>;
+    return <div id="map" style={{ height: '250px', width: '100%', border: '2px' }}></div>;
 };
 
 export default Map;
