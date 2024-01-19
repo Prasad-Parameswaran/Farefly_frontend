@@ -45,7 +45,7 @@ const Map = () => {
             zoom: 7,
         });
 
-        map.on("load", async () => {
+        map.on("mousehover", async () => {
             const bounds = new mapboxgl.LngLatBounds();
 
             if (pickupCoordinates && dropoffCoordinates) {
