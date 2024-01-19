@@ -53,7 +53,7 @@ const Map = () => {
                 await getDirection(pickupCoordinates, dropoffCoordinates).then(
                     (result) => {
                         const routeLayer = {
-                            id: "route",
+                            //id: "route",
                             type: "line",
                             source: {
                                 type: "geojson",
