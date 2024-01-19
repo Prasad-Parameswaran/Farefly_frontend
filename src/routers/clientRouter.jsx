@@ -18,7 +18,7 @@ import Coupon from '../components/user/coupon/coupon'
 import Chat from '../components/user/chat/chat';
 import Page404notfind from '../components/errorPage/page404'
 import ServerErr from '../components/errorPage/page500'
-import Map from '../../src/components/user/map/map3'
+import Map from '../../src/components/user/map/carLocation'
 
 function User() {
     const [userToken, setuserToken] = useState()

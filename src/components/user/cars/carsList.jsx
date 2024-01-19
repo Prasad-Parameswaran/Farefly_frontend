@@ -15,6 +15,7 @@ function CarsList() {
 
     const [district, setDitstrict] = useState([])
     const [localArea, setLocalArea] = useState([])
+    const [carLocalArea, setCarLocalArea] = useState()
     const [districtSelect, setDitstrictSelect] = useState(false)
     const [districtVal, setDistrictVal] = useState('')
     const [loder, setLoder] = useState('')
@@ -169,6 +170,10 @@ function CarsList() {
     }
 
     const findLocalArea = async (val) => {
+        if (val == 'Choose localArea') {
+            return
+        }
+        setCarLocalArea(val)
         setSkelton(true)
         const value = {
             localArea: val,
@@ -351,7 +356,13 @@ function CarsList() {
                             </div>
                         </div>*/}
                         <h1>Car Locaion</h1>
-                        <Map />
+                        {carLocalArea ? carLocalArea && districtVal &&
+                            < Map local={carLocalArea} district={districtVal} />
+                            : districtVal ?
+                                < Map local={carLocalArea} district={districtVal} />
+                                : ''
+
+                        }
                     </>
                     <div className='w-[100%] h-[200px] mt-24  border shadow-lg shadow-gray-500/100 rounded-xl'>
                         <label for="default" class="block mb-2 text-gray-900 dark:text-black font-bold text-lg text-center pt-2 bg-gray-200 ">FILTER CARS</label>
