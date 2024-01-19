@@ -1,68 +1,85 @@
-import { useState, useEffect } from 'react';
-import ReactMapGL, { Marker, NavigationControl } from 'react-map-gl';
-import { useRef } from 'react';
-// import 'mapbox-gl/dist/mapbox-gl.css';
+import React, { useContext, useEffect } from "react";
+import mapboxgl from "mapbox-gl";
+import axios from "axios";
+import "mapbox-gl/dist/mapbox-gl.css";
+import { LocationContext } from "../../../context/LocationContext";
 
 
-const Map = ({ location }) => {
-    const [coordinates, setCoordinates] = useState(null);
-    const Mapref = useRef();
+mapboxgl.accessToken = 'pk.eyJ1IjoibW9oZGlyZmFkIiwiYSI6ImNscmpkYW91bjAyNmgybGswOWM0dnBhN2UifQ.LqhoTnHN03JQ1PpyLu-t1g'
+
+const Map = () => {
+    const { pickupCoordinates, dropoffCoordinates } = useContext(LocationContext);
+    console.log(pickupCoordinates, dropoffCoordinates, "llllllll")
+    const getDirection = async (pickupCoordinates, dropoffCoordinates) => {
+        const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${pickupCoordinates[0]},${pickupCoordinates[1]};${dropoffCoordinates[0]},${dropoffCoordinates[1]}?alternatives=true&geometries=geojson&language=en&overview=simplified&steps=true&access_token=${mapboxgl.accessToken}`;
+        const result = await axios.get(url);
+        console.log(result)
+        return result;
+    };
+
 
     useEffect(() => {
-        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/kannur.json?access_token=pk.eyJ1IjoibW9oZGlyZmFkIiwiYSI6ImNscmpkYW91bjAyNmgybGswOWM0dnBhN2UifQ.LqhoTnHN03JQ1PpyLu-t1g`;
-        fetch(url)
-            .then((response) => response.json())
-            .then((data) => {
-                if (data && data.features.length > 0) {
-                    setCoordinates([data.features[0].center[1], data.features[0].center[0]]);
-                }
-                // console.log(data);
-                //   // Get the city name from the geocoding data
-                //   var cityName = data.features[1].place_name;
-                //   console.log(cityName);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }, [location]);
+        const map = new mapboxgl.Map({
+            container: "map",
+            style: "mapbox://styles/mapbox/streets-v12",
+            center: [76.6413, 10.1632],
+            zoom: 7,
+        });
 
-    // const Mapbox = ReactMapboxGl({
-    //   accessToken: process.env.REACT_APP_MAPBOX_ACCESS_TOKEN
-    // });
+        map.on("load", async () => {
+            const bounds = new mapboxgl.LngLatBounds();
 
-    console.log(coordinates, "11111111111111111")
+            if (pickupCoordinates && dropoffCoordinates) {
 
-    return (
-        <div className='h-[500px] w-[100%] ' >
-            {coordinates && (
-                <ReactMapGL
-                    ref={Mapref}
-                    mapboxAccessToken='pk.eyJ1IjoibW9oZGlyZmFkIiwiYSI6ImNscmpkYW91bjAyNmgybGswOWM0dnBhN2UifQ.LqhoTnHN03JQ1PpyLu-t1g'
-                    containerStyle={{
-                        height: '100%',
-                        width: '100%'
-                    }}
-                    initialViewState={{
-                        longitude: coordinates[1],
-                        latitude: coordinates[0],
-                        zoom: 10
-                    }}
-                    // center={coordinates}
-                    // zoom={8}
-                    mapStyle="mapbox://styles/mapbox/satellite-streets-v12"
-                >
-                    <Marker
-                        longitude={coordinates[1]}
-                        latitude={coordinates[0]}
-                        offsetLeft={-20}
-                        offsetTop={-10} >
+                await getDirection(pickupCoordinates, dropoffCoordinates).then(
+                    (result) => {
+                        const routeLayer = {
+                            id: "route",
+                            type: "line",
+                            source: {
+                                type: "geojson",
+                                data: {
+                                    type: "Feature",
+                                    properties: {},
+                                    geometry: result.data.routes[0].geometry,
+                                },
+                            },
+                            layout: {
+                                "line-join": "round",
+                                "line-cap": "round",
+                            },
+                            paint: {
+                                "line-color": "#888",
+                                "line-width": 8,
+                            },
+                        };
+                        map.addLayer(routeLayer);
+                    }
+                );
+            }
+            if (pickupCoordinates) {
+                addToMap(map, pickupCoordinates);
+                bounds.extend(pickupCoordinates);
+            }
 
-                    </Marker>
-                    <NavigationControl position='bottom-right' />
-                </ReactMapGL>
-            )}
-        </div>
-    );
+            if (dropoffCoordinates) {
+                addToMap(map, dropoffCoordinates);
+                bounds.extend(dropoffCoordinates);
+            }
+            addBoundsToMap(map, bounds);
+        });
+    }, [pickupCoordinates, dropoffCoordinates]);
+
+    const addToMap = (map, coordinates) => {
+        // eslint-disable-next-line no-unused-vars
+        const marker = new mapboxgl.Marker().setLngLat(coordinates).addTo(map);
+    };
+
+    const addBoundsToMap = (map, bounds) => {
+        map.fitBounds(bounds, { padding: 20 });
+    };
+
+    return <div className="flex-1 h-full w-full fixed" id="map" />;
 };
 
 export default Map;

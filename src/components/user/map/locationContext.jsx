@@ -1,80 +1,68 @@
-//import { createContext, useState, useEffect } from "react";
-//import Map3 from "./map3";
+import { createContext, useState, useEffect } from "react";
+let accessToken = 'pk.eyJ1IjoibW9oZGlyZmFkIiwiYSI6ImNscmpkYW91bjAyNmgybGswOWM0dnBhN2UifQ.LqhoTnHN03JQ1PpyLu-t1g'
 
 
-//export const LocationContext = createContext();
+export const LocationContext = createContext();
 
-//export const LocationProvider = () => {
-//    const [pickup, setPickup] = useState("kerala");
-//    const [dropoff, setDropoff] = useState("kochi");
-//    const [pickupCoordinates, setPickupCoordinates] = useState();
-//    const [dropoffCoordinates, setDropoffCoordinates] = useState();
+export const LocationProvider = ({ children }) => {
+    const [pickup, setPickup] = useState("");
+    const [dropoff, setDropoff] = useState("");
+    const [pickupCoordinates, setPickupCoordinates] = useState();
+    const [dropoffCoordinates, setDropoffCoordinates] = useState();
 
-//    const createLocationCoordinate = (locationName, locationType) => {
-//        return new Promise(async (resolve, reject) => {
-//            try {
-//                const mapboxUrl = `https://api.mapbox.com/geocoding/v4/mapbox.places/${locationName}.json?access_token=pk.eyJ1IjoibW9oZGlyZmFkIiwiYSI6ImNsZzNwaWFncTBocHozb28zb3YzcHpvejEifQ.CJcMCCKk4SKR6JBo2-JNnQ`;
-//                const response = await fetch(mapboxUrl);
+    const createLocationCoordinate = (locationName, locationType) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const mapboxUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${locationName}.json?access_token=${accessToken}`;
+                const response = await fetch(mapboxUrl);
+                const data = await response.json()
+                const location = data.features[0].center;
+                console.log(location, 'this location');
+                if (location.length) {
+                    console.log('location 00000000');
+                    switch (locationType) {
+                        case `pickup`:
+                            setPickupCoordinates(location);
 
-//                if (!response.ok) {
-//                    console.error(`Error fetching data. Status: ${response.status}`);
-//                    reject();
-//                    return;
-//                }
-
-//                const data = await response.json();
-//                console.log(data, 'this is my data')
-
-//                if (data.features && data.features.length > 0) {
-//                    const location = data.features[0].center;
-
-//                    switch (locationType) {
-//                        case "pickup":
-//                            setPickupCoordinates(location);
-//                            break;
-//                        case "dropoff":
-//                            setDropoffCoordinates(location);
-//                            break;
-//                    }
-//                    resolve();
-//                } else {
-//                    console.error("No features found in the Mapbox response.");
-//                    reject();
-//                }
-//            } catch (error) {
-//                console.error(error.message);
-//                reject();
-//            }
-//        });
-//    };
+                            break;
+                        case "dropoff":
+                            setDropoffCoordinates(location);
+                            break;
+                    }
 
 
-//    useEffect(() => {
-//        if (pickup && dropoff) {
-//            (async () => {
-//                await Promise.all([createLocationCoordinate(pickup, "pickup"), createLocationCoordinate(dropoff, "dropoff")]);
-//            })();
-//        } else return;
-//    }, [pickup, dropoff]);
+                    resolve();
+                } else {
+                    reject();
+                }
+            } catch (error) {
+                console.log(error.message);
+                reject();
+            }
+        });
+    };
 
-//    return (
-//        <>
-//            {pickupCoordinates &&
-//                < LocationContext.Provider
-//                    value={{
-//                        pickup,
-//                        setPickup,
-//                        dropoff,
-//                        setDropoff,
-//                        pickupCoordinates,
-//                        setDropoffCoordinates,
-//                        setPickupCoordinates,
-//                        dropoffCoordinates,
-//                    }
-//                    }>
-//                    <Map3 />
-//                </LocationContext.Provider >
-//            }
-//        </>
-//    );
-//};
+    useEffect(() => {
+        if (pickup && dropoff) {
+            (async () => {
+                await Promise.all([createLocationCoordinate(pickup, "pickup"), createLocationCoordinate(dropoff, "dropoff")]);
+            })();
+        } else return;
+    }, [pickup, dropoff]);
+
+    return (
+        <LocationContext.Provider
+            value={{
+                pickup,
+                setPickup,
+                dropoff,
+                setDropoff,
+                pickupCoordinates,
+                setDropoffCoordinates,
+                setPickupCoordinates,
+                dropoffCoordinates,
+            }}>
+            {children}
+        </LocationContext.Provider>
+    );
+};
