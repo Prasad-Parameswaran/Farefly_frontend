@@ -49,7 +49,7 @@ const Map = ({ location }) => {
                     }}
                     // center={coordinates}
                     // zoom={8}
-                    mapStyle="mapbox://styles/mapbox/streets-v12"
+                    mapStyle="mapbox://styles/mapbox/satellite-streets-v12"
                 >
                     <Marker
                         longitude={coordinates[1]}
