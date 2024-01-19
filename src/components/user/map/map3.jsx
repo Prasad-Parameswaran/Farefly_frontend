@@ -104,22 +104,19 @@
 
 
 
-
-
-
 import React, { useEffect } from "react";
 import mapboxgl from "mapbox-gl";
 import axios from "axios";
 import "mapbox-gl/dist/mapbox-gl.css";
 
-mapboxgl.accessToken = 'your-mapbox-access-token';
+mapboxgl.accessToken = 'pk.eyJ1IjoibW9oZGlyZmFkIiwiYSI6ImNscmpkYW91bjAyNmgybGswOWM0dnBhN2UifQ.LqhoTnHN03JQ1PpyLu-t1g';
 
 const Map = () => {
     const pickupCoordinates = [76.2673, 9.9312];
     const dropoffCoordinates = [76.9366, 8.5241];
 
     const getDirection = async (pickup, dropoff) => {
-        const url = https://api.mapbox.com/directions/v5/mapbox/driving/${pickup[0]},${pickup[1]};${dropoff[0]},${dropoff[1]}?alternatives=true&geometries=geojson&language=en&overview=simplified&steps=true&access_token=${mapboxgl.accessToken};
+        const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${pickup[0]},${pickup[1]};${dropoff[0]},${dropoff[1]}?alternatives=true&geometries=geojson&language=en&overview=simplified&steps=true&access_token=${mapboxgl.accessToken}`;
         const result = await axios.get(url);
         return result.data.routes[0].geometry;
     };
@@ -132,14 +129,15 @@ const Map = () => {
             zoom: 7,
         });
 
-        const bounds = new mapboxgl.LngLatBounds();
+        let routeLayerId = "";
 
         const addRouteLayer = async () => {
             const geometry = await getDirection(pickupCoordinates, dropoffCoordinates);
 
             // Remove existing "route" layer if it exists
-            if (map.getLayer("route")) {
-                map.removeLayer("route");
+            if (routeLayerId) {
+                map.removeLayer(routeLayerId);
+                map.removeSource(routeLayerId);
             }
 
             const routeLayer = {
@@ -162,21 +160,17 @@ const Map = () => {
                     "line-width": 8,
                 },
             };
+
+            // Add the new "route" layer
+            routeLayerId = routeLayer.id;
+            map.addSource(routeLayerId, routeLayer.source);
             map.addLayer(routeLayer);
 
-            bounds.extend(pickupCoordinates);
-            bounds.extend(dropoffCoordinates);
-            addMarker(map, pickupCoordinates);
-            addMarker(map, dropoffCoordinates);
-            map.fitBounds(bounds, { padding: 20 });
+            map.fitBounds([pickupCoordinates, dropoffCoordinates], { padding: 20 });
         };
 
         addRouteLayer();
     }, [pickupCoordinates, dropoffCoordinates]);
-
-    const addMarker = (map, coordinates) => {
-        new mapboxgl.Marker().setLngLat(coordinates).addTo(map);
-    };
 
     return <div id="map" style={{ height: '200px', width: '100%', border: '2px' }}></div>;
 };
