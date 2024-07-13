@@ -18,7 +18,6 @@ import Coupon from '../components/user/coupon/coupon'
 import Chat from '../components/user/chat/chat';
 import Page404notfind from '../components/errorPage/page404'
 import ServerErr from '../components/errorPage/page500'
-import Map from '../../src/components/user/map/carLocation'
 
 function User() {
     const [userToken, setuserToken] = useState()
@@ -53,7 +52,6 @@ function User() {
                 <Route path="/error404" element={<Page404notfind />} />
                 <Route path="/error500" element={<ServerErr />} />
                 {/*<Route path="/map" element={<ServerErr />} />*/}
-                <Route path="/map2" element={< Map />} />
             </Routes>
 
         </div >

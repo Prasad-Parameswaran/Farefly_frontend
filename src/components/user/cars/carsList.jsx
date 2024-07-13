@@ -479,14 +479,7 @@ function CarsList() {
                                 <Skelton />
                                 <Skelton />
                             </div>
-
-
-
-
                         }
-
-
-
                     </div>
                 </div>
             </div>

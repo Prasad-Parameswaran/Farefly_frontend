@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import axios from "axios";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { LocationContext } from "./locationContext";
+//import { LocationContext } from "./locationContext";
 
 
 mapboxgl.accessToken = 'pk.eyJ1IjoibW9oZGlyZmFkIiwiYSI6ImNscmpkYW91bjAyNmgybGswOWM0dnBhN2UifQ.LqhoTnHN03JQ1PpyLu-t1g'
@@ -55,7 +55,7 @@ const Map = ({ local, district }) => {
     const renderMap = () => {
         const map = new mapboxgl.Map({
             container: "map",
-            style: "mapbox://styles/mapbox/satellite-streets-v12",
+            style: "mapbox://styles/mapbox/streets-v12",
             center: [76.6413, 10.1632],
             zoom: 7,
         });
