@@ -6,6 +6,8 @@ const clientAxiosIntercepter = (url) => {
         //baseURL: `http://localhost:4000/`,
         //baseURL: 'https://farflybackend.onrender.com',
         //baseURL: 'https://farefly.de-vip.online',
+        //baseURL: 'https://farefly-backend.vercel.app',
+        baseURL: 'https://farefly-backend.onrender.com',
     });
 
     instance.interceptors.request.use(
@@ -51,6 +53,8 @@ const partnerAxiosIntercepter = (url) => {
         //baseURL: `http://localhost:4000/partner/`,
         //baseURL: 'https://farflybackend.onrender.com/partner/',
         //baseURL: 'https://farefly.de-vip.online/partner',
+        //baseURL: 'https://farefly-backend.vercel.app/partner/',
+        baseURL: 'https://farefly-backend.onrender.com/partner/',
 
     });
 
@@ -99,6 +103,8 @@ const adminAxiosIntercepter = (url) => {
         //baseURL: `http://localhost:4000/admin/`,
         //baseURL: 'https://farflybackend.onrender.com/admin/',
         //baseURL: 'https://farefly.de-vip.online/admin',
+        //baseURL: 'https://farefly-backend.vercel.app/admin/',
+        baseURL: 'https://farefly-backend.onrender.com/admin/',
 
     });
 

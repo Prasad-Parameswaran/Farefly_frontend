@@ -64,7 +64,8 @@ const SignUp = () => {
                 repassword
             }
 
-            await axios.post('http://localhost:4000/signup', { email, phone }).then((response) => {
+            //await axios.post('http://localhost:4000/signup', { email, phone }).then((response) => {
+            await axios.post('https://farefly-backend.onrender.com/signup', { email, phone }).then((response) => {
                 //await axios.post('https://farflybackend.onrender.com/signup', { email, phone }).then((response) => {
                 //await axios.post('https://farefly.de-vip.online/signup', { email, phone }).then((response) => {
                 if (response.data.success) {
