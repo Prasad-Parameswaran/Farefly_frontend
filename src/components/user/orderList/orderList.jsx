@@ -7,7 +7,6 @@ import toast from 'react-hot-toast'
 import Footer from '../footer/footer'
 import Chat from '../chat/chat'
 
-
 function OrderList() {
     const navigate = useNavigate()
     const [bookingCars, setBookingCars] = useState()
@@ -19,20 +18,16 @@ function OrderList() {
     const [chat, setChat] = useState(false)
     const [chatList, setChatList] = useState(false)
 
-
     const handleView = (id) => {
         setView(true)
         setCars(false)
-        const bookigViewDetails = bookingCars.find((value) => {
-            return value._id == id
-        })
+        const bookigViewDetails = bookingCars.find((value) => value._id == id)
         setBookingView([bookigViewDetails])
-
     }
+
     const handleBack = () => {
         setView(false)
         setCars(true)
-
     }
 
     const hahdleChat = (bookId, partner) => {
@@ -41,11 +36,11 @@ function OrderList() {
         setCars(false)
         setChat(true)
     }
+
     const handleChatBackButton = () => {
         setChat(false)
         setCars(true)
     }
-
 
     const bookingCancel = async (id) => {
         const response = await handleCancel(id)
@@ -56,345 +51,199 @@ function OrderList() {
             toast.error(response.data.message)
         }
     }
+
     useEffect(() => {
         const value = async () => {
             const response = await Bookinghistory()
             if (response.data.success) {
                 setBookingCars(response.data.bookingDetails)
                 setChatList(response.data.chatData)
-                //toast.success('there is your bookings ')
             } else {
-                toast.error('no bookings available...........')
+                toast.error('No bookings available')
             }
         }
         value()
-
     }, [])
 
-
     return (
-
-        <>
-            < div >
+        <div className="bg-gray-900 min-h-screen font-sans text-gray-100 flex flex-col pt-16">
+            <div className="sticky top-0 z-50">
                 <Navbar />
-            </div >
-            <div className='flex justify-center w-[100%] h-screen'>
-                {
-                    cars &&
-                    < div className="bg-white p-8 rounded-md w-full " >
-                        <div className=" flex items-center justify-between pb-6">
-                            <div className='border border-lime-100 bg-lime-100 w-20 h-20 rounded-sm flex flex-col  justify-center text-center'>
-                                <h2 className="text-gray-600 font-semibold"> BOOKINGs</h2>
-                                <span className="text-xs" > All Bookings</span >
-                            </div >
-                            <div className="flex items-center justify-between" >
-                                {/*<div className="flex bg-gray-50 items-center p-2 rounded-md" >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20"
-                            fill="currentColor" >
-                            <path fill-rule="evenodd"
-                                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                clip-rule="evenodd" />
-                        </svg >
-                        <input className="bg-gray-50 outline-none ml-1 block " type="text" name="" id="" placeholder="search..." />
-                     </div >a*/}
-                                <div className="lg:ml-40 ml-10 space-x-8" >
-                                    <button className="bg-transparent hover:bg-lime-500 text-lime-700 font-semibold hover:text-white py-2 px-4 border border-lime-500 hover:border-transparent rounded" onClick={() => { navigate('/profile') }} > Back to Profile</button >
-                                    {/*<button className="bg-lime-600 px-4 py-2 rounded-md text-white font-semibold tracking-wide cursor-pointer" > Create</button >*/}
-                                </div >
-                            </div >
-                        </div >
-                        <div className="lg-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto h-[600px] ">
-                            <div className="inline-block min-w-full shadow rounded-lg overflow-hidden border border-lime-500">
-                                <table className="min-w-full leading-normal">
-                                    <thead>
-                                        <tr>
-                                            <th
-                                                className="px-5 py-3 border-b-2 border-gray-200 bg-lime-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                Car Make
-                                            </th>
-                                            <th
-                                                className="px-5 py-3 border-b-2 border-gray-200 bg-lime-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                Car Model
-                                            </th>
-                                            <th
-                                                className="px-5 py-3 border-b-2 border-gray-200 bg-lime-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                Starting Date
-                                            </th>
-                                            <th
-                                                className="px-5 py-3 border-b-2 border-gray-200 bg-lime-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider" >
-                                                Ending Date
+            </div>
 
-                                            </th >
-                                            <th
-                                                className="px-5 py-3 border-b-2 border-gray-200 bg-lime-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider" >
-                                                Booking Method
-                                            </th >
-                                            <th
-                                                className="px-5 py-3 border-b-2 border-gray-200 bg-lime-100 text-left text-xs font-semibold text-green-600 uppercase tracking-wider" >
-                                                Booking Status
-                                            </th >
-                                            <th
-                                                className="px-5 py-3 border-b-2 border-gray-200 bg-lime-100 text-left text-xs font-semibold text-blue-600 uppercase tracking-wider" >
-                                                View Details
-                                            </th >
-                                            <th
-                                                className="px-5 py-3 border-b-2 border-gray-200 bg-lime-100 text-left text-xs font-semibold text-red-600 uppercase tracking-wider" >
-                                                Cancel
-                                            </th >
-                                            <th
-                                                className="px-5 py-3 border-b-2 border-gray-200 bg-lime-100 text-left text-xs font-semibold text-red-600 uppercase tracking-wider" >
-                                                chat
-                                            </th >
-                                        </tr >
-                                    </thead >
-                                    {bookingCars ?
-                                        bookingCars.map((value, index) => (
-                                            //value.status != 'Cancel' &&
-                                            < tbody key={index} >
-                                                < tr >
-                                                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm ">
-                                                        <div className="flex items-center">
-                                                            <div className="flex-shrink-0 w-10 h-10">
-                                                                <img className="w-full h-full rounded-full"
-                                                                    src={value.car.carImage1}
-                                                                    alt="" />
-                                                            </div>
-                                                            <div className="ml-3">
-                                                                <p className="text-gray-900 whitespace-no-wrap">
-                                                                    {value.car.carMake}      </p>
-                                                            </div >
-                                                        </div >
-                                                    </td >
-                                                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm" >
-                                                        <p className="text-gray-900 whitespace-no-wrap" > {value.car.model}</p >
-                                                    </td >
-                                                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm" >
-                                                        <p className="text-gray-900 whitespace-no-wrap" >
-                                                            {value.pickUpDate}
-                                                        </p >
-                                                    </td >
-                                                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm" >
-                                                        <p className="text-gray-900 whitespace-no-wrap" >
-                                                            {value.dropDate}
-                                                        </p >
-                                                    </td >
-                                                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm" >
-                                                        <span
-                                                            className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight" >
-                                                            <span aria-hidden
-                                                                className={`absolute inset-0 ${value.paymentMethod == 'wallet' ? 'bg-lime-300' : 'bg-violet-300'} opacity-50 rounded-full`} ></span>
-                                                            <span className="relative" > {value.paymentMethod}</span >
-                                                        </span >
-                                                    </td >
-                                                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm" >
-                                                        <span
-                                                            className="relative inline-block px-3 py-1 font-semibold  leading-tight" >
-                                                            <span aria-hidden
-                                                                className={`absolute inset-0 ${value.status == 'Cancel' ? 'bg-red-300' : 'bg-green-200'} opacity-50 rounded-full`}></span>
-                                                            <span className="relative" > {value.status}</span >
+            <div className='flex-grow container mx-auto px-4 py-8 max-w-7xl relative'>
+                {/* Decorative blob */}
+                <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-teal-500/5 blur-[120px] pointer-events-none"></div>
 
-
-                                                        </span >
-                                                        {value.status == 'Cancel' &&
-                                                            <span className=''>❌</span>
-                                                        }
-                                                        {value.status == 'Completed' &&
-                                                            <span className='text-lime-400'>  ✔</span>
-
-                                                        }
-                                                    </td >
-                                                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm" >
-                                                        <span
-                                                            className="relative inline-block px-3 py-1 font-semibold  leading-tight" >
-                                                            <a className="relative  cursor-pointer text-blue-600" onClick={() => { handleView(value._id) }}> View</a >
-                                                        </span >
-                                                    </td >
-                                                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm" >
-                                                        <span
-                                                            className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight" >
-                                                            <button class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded" onClick={() => { bookingCancel(value._id) }} >
-                                                                Cancel
-                                                            </button>
-                                                        </span >
-                                                    </td >
-                                                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm relative">
-                                                        <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight ">
-                                                            <button class="bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded" onClick={() => { hahdleChat(value._id, value.partner) }}>
-                                                                chat
-                                                            </button>   {
-                                                                chatList.some((data) => {
-                                                                    return data.PartnerMessage == true && value._id == data.bookingId
-                                                                })
-                                                                    ?
-                                                                    < span className="absolute top-0 right-0 bg-orange-500 text-white px-.5 py-.5 rounded-full p-0.5" >New</span>
-                                                                    : null
-                                                            }
-                                                        </span>
-                                                    </td>
-
-                                                </tr >
-                                            </tbody >
-                                        ))
-                                        : ''
-                                    }
-                                </table >
-
-
-                                <div
-                                    className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between          " >
-                                    {/*<span className="text-xs xs:text-sm text-gray-900" >
-                                    Showing 1 to 4 of 50 Entries
-                                </span >*/}
-                                    <div className="inline-flex mt-2 xs:mt-0 gap-3" >
-                                        <button
-                                            className="text-sm text-indigo-50 transition duration-150 hover:bg-lime-900 bg-lime-600 font-semibold py-2 px-4 rounded-l" >
-                                            Prev
-                                        </button >
-                                        <button
-                                            className="text-sm text-indigo-50 transition duration-150 hover:bg-lime-900 bg-lime-600 font-semibold py-2 px-4 rounded-r">
-                                            Next
-                                        </button >
-                                    </div >
-                                </div >
-                            </div >
-                        </div >
-                    </div >
-                }
-                {chat &&
-                    <>
-
-                        <div className='w-full h-screen'>
-                            <Chat partnerChat={partnerChat} bookingIdUser={bookingId} />
-
+                {cars && (
+                    <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-8 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] relative z-10">
+                        <div className="flex flex-col md:flex-row items-start md:items-center justify-between pb-8 border-b border-gray-700/50 mb-6 gap-4">
+                            <div className='flex items-center gap-4'>
+                                <div className='bg-gradient-to-br from-teal-500/20 to-emerald-500/20 border border-teal-500/30 w-16 h-16 rounded-2xl flex items-center justify-center text-teal-400'>
+                                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                </div>
+                                <div>
+                                    <h2 className="text-2xl font-bold text-white tracking-wide">My Bookings</h2>
+                                    <span className="text-sm text-gray-400">View and manage your rentals</span>
+                                </div>
+                            </div>
+                            <div>
+                                <button className="bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold py-2 px-6 border border-gray-600 rounded-xl transition-colors tracking-wide flex items-center" onClick={() => navigate('/profile')}>
+                                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                                    Back to Profile
+                                </button>
+                            </div>
                         </div>
-                        <div className=" " >
-                            <button className="bg-transparent hover:bg-gray-500 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-gray-500 hover:border-transparent rounded justify-end" onClick={handleChatBackButton}  > Back </button >
-                            {/*<button className="bg-lime-600 px-4 py-2 rounded-md text-white font-semibold tracking-wide cursor-pointer" > Create</button >*/}
-                        </div >
 
-                    </>
-
-                }
-
-                {
-                    view &&
-
-                    <div className="w-full lg:w-[50rem] mt-10 lg:mt-0 h-full lg:ml-14 lg:h-[31rem]  mb-3 lg:mb-0 lg:mr-3 flex flex-col  items-center lg:items-center pt-5 custom-shadow ">
-                        <h2 className="text-3xl font-bold mb-4 text-center md:text-center bg-gray-300 rounded p-2">
-                            Booking Car Details
-                        </h2>
-                        <div className="w-full flex justify-end mr-24 space-x-8" >
-                            <button className="bg-transparent hover:bg-gray-500 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-gray-500 hover:border-transparent rounded justify-end" onClick={handleBack}  > Back </button >
-                            {/*<button className="bg-lime-600 px-4 py-2 rounded-md text-white font-semibold tracking-wide cursor-pointer" > Create</button >*/}
-                        </div >
-
-                        <div className="w-full mt-3 lg:mt-0  lg:w-[45rem] h-auto lg:h-[100%]  mb-3 lg:mb-0 lg:mr-3 flex justify-end flex-col lg:flex-row  border border-lime-100" >
-                            {bookingView.map((value, index) => (
-                                <>
-                                    <div
-
-                                        className="w-full lg:w-[40%] md:h-[130%] lg:h-[100%] flex flex-col justify-center items-center shadow-xl bg-gray-50 rounded-lg"
-                                    >
-                                        <h1 className="text-2xl font-bold mb-4">
-                                            {value.car.carMake}
-                                        </h1>
-                                        <img
-                                            src={value.car.carImage1}
-
-                                            className="w-64 h-40 rounded-lg mb-3 hover:scale-125 transform-gpu transition-transform duration-500 ease-in-out"
-                                            alt=""
-                                        />
-                                        <div className="mt-5 text-2xl flex justify-center text-center  font-mono text-gray-800 h-10 w-[50%] bg-white rounded-3xl">
-                                            <span >{value.car.price}₹/Day</span>
-
-                                        </div>
-                                    </div>
-
-                                    <div className="w-full lg:w-[60%] md:h-[130%] lg:h-[100%] py-6 shadow-xl bg-white rounded-lg">
-                                        <div className="flex flex-col justify-between pl-2 pr-5">
-                                            <p className="text-lg font-medium flex flex-row justify-between">
-                                                <span>{value.pickUpDate}</span>
-                                                <span>{value.dropDate}</span>
-                                            </p>
-                                            <p className="text-lg  flex flex-row justify-between">
-                                                <span className="pt-2 font-medium">Pick up point</span>
-                                                <span className='font-serif'>{value.dropPlace},{value.partner?.localArea}</span>
-                                            </p>
-
-                                            <p className="text-lg  flex flex-row justify-between mt-2">
-                                                <span className="pt-1 font-medium">Drop up point</span>
-                                                <span className='font-serif'>{value.pickUpPlace},{value.partner?.localArea}</span>
-                                            </p>
-                                            {/*<p className="text-lg font-medium flex flex-row justify-between pt-1">
-                                                <span>Total Days</span>
-                                                <span>{dayCount} Days</span>
-                                            </p>*/}
-                                            {/*<p className="text-lg font-medium flex flex-row justify-between">
-                                                <span>Owner Name</span>
-                                                <span>{bookingCar[0].ownerName}</span>
-                                            </p>*/}
-                                            <p className="text-lg font-medium flex flex-row justify-between">
-                                                <span>Plate Number</span>
-                                                <span>{value.car.carLicenseNumber}</span>
-                                            </p>
-
-                                            <p className="text-lg font-medium flex flex-row justify-between ">
-                                                <span>FuelType </span>
-                                                <span>{value.car.fuelType}</span>
-                                            </p>
-                                            <p className="text-lg font-medium flex flex-row justify-between ">
-                                                <span>Category </span>
-                                                <span>{value.car.carCategory}</span>
-                                            </p>
-                                            <p className="text-lg font-medium flex flex-row justify-between ">
-                                                <span>Transmission </span>
-                                                <span>{value.car.transmission}</span>
-                                            </p>
-                                            <p className="text-lg font-medium flex flex-row justify-between ">
-                                                <span>carYear </span>
-                                                <span>{value.car.carYear}</span>
-                                            </p>
-                                            <p className="text-lg font-medium flex flex-row justify-between ">
-                                                <span>cgst </span>
-                                                <span>{value.Cgst}₹</span>
-                                            </p>
-                                            <p className="text-lg font-medium flex flex-row justify-between ">
-                                                <span>sgst </span>
-                                                <span>{value.Sgst}₹</span>
-                                            </p>
-                                            <p className="text-lg font-medium flex flex-row justify-between">
-                                                <span>_______________________________________________________</span>
-                                            </p>
-                                            <p className="text-lg font-medium flex flex-row justify-between ">
-                                                <span>Total Amount </span>
-                                                <span>{value.TotalAmount}₹</span>
-                                            </p>
-                                            <p className="text-lg font-medium flex flex-row justify-between ">
-                                                <span></span>
-                                                <span>______</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </>
-                            ))}
+                        <div className="overflow-x-auto rounded-xl border border-gray-700/50">
+                            <table className="min-w-full leading-normal text-left">
+                                <thead>
+                                    <tr>
+                                        {['Car Model', 'Dates', 'Method', 'Status', 'Actions'].map((header, idx) => (
+                                            <th key={idx} className="px-5 py-4 bg-gray-800/80 border-b border-gray-700/50 text-xs font-semibold text-gray-300 uppercase tracking-wider">
+                                                {header}
+                                            </th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {bookingCars ? bookingCars.map((value, index) => (
+                                        <tr key={index} className="hover:bg-gray-800/40 transition-colors">
+                                            <td className="px-5 py-4 border-b border-gray-700/50 text-sm">
+                                                <div className="flex items-center">
+                                                    <div className="w-14 h-10 rounded-lg overflow-hidden border border-gray-700">
+                                                        <img className="w-full h-full object-cover" src={value.car.carImage1} alt="car" />
+                                                    </div>
+                                                    <div className="ml-4">
+                                                        <p className="text-white font-bold text-base">{value.car.carMake}</p>
+                                                        <p className="text-gray-400 text-xs">{value.car.model}</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="px-5 py-4 border-b border-gray-700/50 text-sm">
+                                                <p className="text-gray-300 font-medium">{value.pickUpDate}</p>
+                                                <p className="text-gray-500 text-xs mt-1">to {value.dropDate}</p>
+                                            </td>
+                                            <td className="px-5 py-4 border-b border-gray-700/50 text-sm">
+                                                <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full border ${value.paymentMethod === 'wallet' ? 'bg-purple-500/10 text-purple-400 border-purple-500/30' : 'bg-blue-500/10 text-blue-400 border-blue-500/30'}`}>
+                                                    {value.paymentMethod}
+                                                </span>
+                                            </td>
+                                            <td className="px-5 py-4 border-b border-gray-700/50 text-sm">
+                                                <span className={`inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full border ${value.status === 'Cancel' ? 'bg-red-500/10 text-red-400 border-red-500/30' : value.status === 'Completed' ? 'bg-teal-500/10 text-teal-400 border-teal-500/30' : 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30'}`}>
+                                                    {value.status === 'Cancel' ? <span className='mr-1'>✕</span> : value.status === 'Completed' ? <span className='mr-1'>✓</span> : <span className='mr-1'>⏳</span>}
+                                                    {value.status}
+                                                </span>
+                                            </td>
+                                            <td className="px-5 py-4 border-b border-gray-700/50 text-sm">
+                                                <div className="flex items-center gap-3">
+                                                    <button onClick={() => handleView(value._id)} className="text-teal-400 hover:text-teal-300 font-semibold transition-colors">Details</button>
+                                                    
+                                                    {value.status !== 'Cancel' && (
+                                                        <button onClick={() => bookingCancel(value._id)} className="text-red-400 hover:text-red-300 font-semibold transition-colors">Cancel</button>
+                                                    )}
+                                                    
+                                                    <div className="relative">
+                                                        <button onClick={() => hahdleChat(value._id, value.partner)} className="text-blue-400 hover:text-blue-300 font-semibold transition-colors flex items-center">
+                                                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                                                            Chat
+                                                        </button>
+                                                        {chatList && chatList.some(data => data.PartnerMessage === true && value._id === data.bookingId) && (
+                                                            <span className="absolute -top-2 -right-2 bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full ring-2 ring-gray-900">New</span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )) : (
+                                        <tr><td colSpan="5" className="px-5 py-8 text-center text-gray-500">No bookings found</td></tr>
+                                    )}
+                                </tbody>
+                            </table>
+                            
+                            <div className="px-5 py-4 bg-gray-800/50 border-t border-gray-700/50 flex items-center justify-end">
+                                <div className="inline-flex gap-2">
+                                    <button className="bg-gray-800 hover:bg-gray-700 text-gray-300 text-sm font-semibold py-2 px-4 rounded-lg border border-gray-600 transition-colors">Prev</button>
+                                    <button className="bg-gray-800 hover:bg-gray-700 text-gray-300 text-sm font-semibold py-2 px-4 rounded-lg border border-gray-600 transition-colors">Next</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                }
+                )}
 
-            </div >
-            <div>
-                <Footer />
+                {chat && (
+                    <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] min-h-[600px] flex flex-col">
+                        <div className="p-4 border-b border-gray-700/50 flex justify-between items-center bg-gray-800/50">
+                            <h3 className="text-lg font-bold text-white flex items-center">
+                                <svg className="w-5 h-5 mr-2 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg>
+                                Host Chat
+                            </h3>
+                            <button className="bg-gray-700 hover:bg-gray-600 text-gray-200 text-sm font-semibold py-1.5 px-4 rounded-lg transition-colors flex items-center" onClick={handleChatBackButton}>
+                                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg> Back
+                            </button>
+                        </div>
+                        <div className="flex-grow p-4">
+                            <Chat partnerChat={partnerChat} bookingIdUser={bookingId} />
+                        </div>
+                    </div>
+                )}
+
+                {view && bookingView.map((value, index) => (
+                    <div key={index} className="bg-gray-900 border border-white/10 rounded-3xl overflow-hidden shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] flex flex-col xl:flex-row relative">
+                        <button className="absolute top-4 right-4 z-20 bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold w-10 h-10 rounded-full flex items-center justify-center transition-colors border border-gray-600" onClick={handleBack}>✕</button>
+
+                        <div className="w-full xl:w-2/5 relative">
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent to-gray-900 z-10 hidden xl:block"></div>
+                            <img src={value.car.carImage1} className="w-full h-64 xl:h-full object-cover" alt="Car" />
+                            <div className="absolute bottom-6 left-6 z-20 hidden xl:block">
+                                <h1 className="text-4xl font-extrabold text-white mb-2 drop-shadow-lg">{value.car.carMake}</h1>
+                                <div className="text-xl font-bold text-teal-400 py-1.5 px-4 bg-gray-900/80 backdrop-blur-md rounded-full border border-teal-500/30 inline-block">
+                                    {value.car.price}₹/Day
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="w-full xl:w-3/5 p-8 lg:p-12 relative z-10 bg-gray-900">
+                            <div className="xl:hidden mb-8">
+                                <h1 className="text-3xl font-extrabold text-white mb-2">{value.car.carMake}</h1>
+                                <div className="text-lg font-bold text-teal-400 py-1 px-4 bg-gray-800 rounded-full border border-teal-500/30 inline-block">
+                                    {value.car.price}₹/Day
+                                </div>
+                            </div>
+
+                            <h2 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400 mb-6 uppercase tracking-wider">Booking Receipt</h2>
+                            
+                            <div className="space-y-4">
+                                <div className="grid grid-cols-2 gap-4 pb-4 border-b border-gray-800">
+                                    <div><p className="text-gray-500 text-sm">Pick up</p><p className="text-gray-200 font-semibold">{value.pickUpDate}</p><p className="text-gray-400 text-sm mt-1">{value.pickUpPlace}, {value.partner?.localArea}</p></div>
+                                    <div><p className="text-gray-500 text-sm">Drop off</p><p className="text-gray-200 font-semibold">{value.dropDate}</p><p className="text-gray-400 text-sm mt-1">{value.dropPlace}, {value.partner?.localArea}</p></div>
+                                </div>
+                                
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-4 border-b border-gray-800">
+                                    <div><p className="text-gray-500 text-xs uppercase text-center w-full block">License</p><p className="text-gray-300 font-medium text-center">{value.car.carLicenseNumber}</p></div>
+                                    <div><p className="text-gray-500 text-xs uppercase text-center w-full block">Fuel</p><p className="text-gray-300 font-medium text-center">{value.car.fuelType}</p></div>
+                                    <div><p className="text-gray-500 text-xs uppercase text-center w-full block">Trans</p><p className="text-gray-300 font-medium text-center">{value.car.transmission}</p></div>
+                                    <div><p className="text-gray-500 text-xs uppercase text-center w-full block">Year</p><p className="text-gray-300 font-medium text-center">{value.car.carYear}</p></div>
+                                </div>
+                                
+                                <div className="pt-4 space-y-3">
+                                    <div className="flex justify-between text-gray-400"><p>Base Amount</p><p>₹{value.TotalAmount - value.Cgst - value.Sgst}</p></div>
+                                    <div className="flex justify-between text-gray-400 text-sm"><p>CGST (5%)</p><p>₹{value.Cgst}</p></div>
+                                    <div className="flex justify-between text-gray-400 text-sm"><p>SGST (10%)</p><p>₹{value.Sgst}</p></div>
+                                    <div className="pt-4 mt-2 border-t border-gray-800 flex justify-between items-end">
+                                        <h3 className="text-lg text-gray-300 font-medium">Grand Total</h3>
+                                        <p className="text-3xl font-bold text-teal-400">₹{value.TotalAmount}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ))}
             </div>
-        </>
+            
+            <Footer />
+        </div>
     )
 }
 
 export default OrderList
-
-
-
-
-
-
-
-

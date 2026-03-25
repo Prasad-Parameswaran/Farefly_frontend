@@ -5,7 +5,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 //import { LocationContext } from "./locationContext";
 
 
-mapboxgl.accessToken = 'pk.eyJ1IjoibW9oZGlyZmFkIiwiYSI6ImNscmpkYW91bjAyNmgybGswOWM0dnBhN2UifQ.LqhoTnHN03JQ1PpyLu-t1g'
+mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
 const Map = ({ local, district }) => {
 
@@ -154,7 +154,7 @@ const Map = ({ local, district }) => {
         }
     }, [dropoffCoordinates, location2])
 
-    return <div id="map" style={{ height: '200px', width: '100%', border: '2px' }}></div>;
+    return <div id="map" className="rounded-2xl overflow-hidden border border-gray-700/50 shadow-[0_0_15px_rgba(20,184,166,0.1)]" style={{ height: '100%', minHeight: '200px', width: '100%' }}></div>;
 };
 
 export default Map;

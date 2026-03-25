@@ -15,9 +15,11 @@ function LogInButton() {
     const dispatch = useDispatch()
 
     const onSuccess = async (res) => {
+        console.log('Google login success:', res)
         if (res) {
-            console.log(res)
+            console.log('Google profileObj:', res.profileObj)
             const response = await googleAuthentication(res.profileObj)
+            console.log('Google auth response:', response)
             if (response.data.success) {
                 localStorage.setItem('Token', response.data.partnerToken);
                 dispatch(UserLG(response.data.partnerToken))

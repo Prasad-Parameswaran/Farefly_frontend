@@ -27,7 +27,6 @@ function CarsList() {
     const [skelton, setSkelton] = useState(false)
     const location = useLocation()
 
-
     const searchParams1 = new URLSearchParams(location.search)
 
     const pickUpDate = searchParams1.get("pickUpDate")
@@ -38,8 +37,6 @@ function CarsList() {
         dropDate: dropDate,
         district: districtName,
     }
-
-
 
     const findcars = async () => {
         data.districtChanges = districtVal
@@ -59,7 +56,6 @@ function CarsList() {
             setCars(initialCars);
         }
     };
-
 
     const search = (e) => {
         setSearchCar(e.target.value);
@@ -159,7 +155,6 @@ function CarsList() {
                     setCars(response.data.data)
                     setLocalArea(response.data.localArea)
                     setDitstrict(response.data.district)
-                    //setDitstrictSelect(true)
                 } else {
                     toast.error('something went wrong ')
                 }
@@ -198,7 +193,6 @@ function CarsList() {
     }
 
     const booking = async (id) => {
-        console.log('this is my form data object')
         const start = document.getElementById('pickUpDate').value
         const end = document.getElementById('dropDate').value
         if (start == '') {
@@ -210,23 +204,12 @@ function CarsList() {
             toast.error('!Please select District ')
 
         } else {
-            const obj = {
-                pickUpDate: start,
-                dropDate: end,
-                carId: id,
-                district: districtVal,
-            }
             navigate(`/booking?pickUpDate=${start}&&dropDate=${end}&&carId=${id}&&district=${districtVal}`)
         }
-
-
     }
-
-
 
     useEffect(() => {
         const list = async () => {
-            //setLoder(`https://cdn.dribbble.com/users/851350/screenshots/2778946/media/6d198585898ba9fbd1bc4812cedcff65.gif`)
             setTimeout(() => {
                 find(data)
                 setLoder('')
@@ -239,256 +222,181 @@ function CarsList() {
 
     const Skelton = () => {
         return (
-            <div role="status" className="space-y-8 m-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center">
-                <div className="flex items-center justify-center w-full h-28 bg-gray-100 rounded sm:w-48 dark:bg-gray-300">
-                    <svg className="w-2 h-2 text-gray-200 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+            <div role="status" className="w-full flex p-5 border border-white/10 rounded-2xl bg-gray-800/30 animate-pulse my-6">
+                <div className="flex items-center justify-center w-[300px] h-[200px] bg-gray-700/50 rounded-xl">
+                    <svg className="w-12 h-12 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
                         <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
                     </svg>
                 </div>
-                <div className="w-full">
-                    <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-200 w-48 mb-4"></div>
-                    <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-200 max-w-[480px] mb-2.5"></div>
-                    <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-200 mb-2.5"></div>
-                    <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-200 max-w-[440px] mb-2.5"></div>
-                    <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-200 max-w-[460px] mb-2.5"></div>
-                    <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-200 max-w-[360px]"></div>
+                <div className="w-full pl-6 pt-2">
+                    <div className="h-4 bg-gray-600 rounded-full w-48 mb-6"></div>
+                    <div className="h-3 bg-gray-600 rounded-full w-32 mb-4"></div>
+                    <div className="mt-12 h-10 bg-gray-600 rounded-lg w-32 ml-auto"></div>
                 </div>
-                <span className="sr-only">Loading...</span>
             </div>
         )
     }
 
-
-
-
     return (
-        <div className='h-[30%]'>
+        <div className="bg-gray-900 min-h-screen font-sans text-gray-100 flex flex-col pt-16">
             <div className='sticky top-0 z-50'>
                 <Navbar />
             </div>
-            <div className='sticky top-0 z-50'>
-                <div>
-                    <div className="bg-lime-600 p-4 text-white">
-                        <div className="flex items-center justify-between">
-                            {/* Date Filter */}
-                            <form onSubmit={dateFilter} className="flex items-center space-x-4">
-                                <div className="flex items-center ">
-                                    <label htmlFor="dateFilter" className="text-white">
-                                        START:
-                                    </label>
-                                    <input
-                                        type="date"
-                                        id="pickUpDate"
-                                        defaultValue={start}
-                                        name='pickUpDate'
-                                        //onChange={(e) => onDateFilter(e.target.value)}
-                                        min={new Date().toISOString().split(" T")[0]}
 
-                                        className="border p-1 text-black rounded-lg"
-                                    />
-                                </div>
-                                <div className="flex items-center space-x-4">
-                                    <label htmlFor="dateFilter" className="text-white">
-                                        END:
-                                    </label>
-                                    <input
-                                        type="date"
-                                        id="dropDate"
-                                        name='dropDate'
-                                        defaultValue={end}
-                                        //onChange={(e) => onDateFilter(e.target.value)}
-                                        className="border p-1 text-black rounded-lg"
-                                        min={new Date().toISOString().split(" T")[0]}
-
-                                    />
-                                </div>
-                                <div className="flex items-center ">
-                                    <button type="submit" className=" text-white bg-gradient-to-r from-gray-400 via-gray-600 to-gray-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-gray-600
-                                  dark:focus:ring-gray-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 ">Find</button>
-                                </div>
-                            </form>
-
-                            {/* Search */}
-                            <div className="flex items-center space-x-4">
-                                <label htmlFor="search" className="text-white ">
-                                    SEARCH:
-                                </label>
+            {/* Filter Bar */}
+            <div className='sticky top-[72px] z-40 bg-gray-900/80 backdrop-blur-md border-b border-gray-700/50 shadow-lg px-4 py-4'>
+                <div className="max-w-screen-xl mx-auto">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <form onSubmit={dateFilter} className="flex flex-wrap items-center gap-4 w-full md:w-auto">
+                            <div className="flex items-center bg-gray-800/50 border border-gray-700/50 rounded-xl px-4 py-2 hover:border-teal-500/50 transition-colors">
+                                <label htmlFor="pickUpDate" className="text-gray-400 text-sm font-semibold mr-3">START</label>
                                 <input
-                                    type="text"
-                                    id="search"
-                                    //value={searchTerm}
-                                    onChange={search}
-                                    className="border p-1 rounded-lg text-black"
+                                    type="date"
+                                    id="pickUpDate"
+                                    defaultValue={start}
+                                    name='pickUpDate'
+                                    min={new Date().toISOString().split("T")[0]}
+                                    className="bg-transparent text-white focus:outline-none focus:ring-0 text-sm"
                                 />
-                                {/*<button className="bg-black px-3 py-1 rounded-xl cursor-pointer ">
-                                    Search
-                                </button>*/}
                             </div>
+                            <div className="flex items-center bg-gray-800/50 border border-gray-700/50 rounded-xl px-4 py-2 hover:border-teal-500/50 transition-colors">
+                                <label htmlFor="dropDate" className="text-gray-400 text-sm font-semibold mr-3">END</label>
+                                <input
+                                    type="date"
+                                    id="dropDate"
+                                    name='dropDate'
+                                    defaultValue={end}
+                                    min={new Date().toISOString().split("T")[0]}
+                                    className="bg-transparent text-white focus:outline-none focus:ring-0 text-sm"
+                                />
+                            </div>
+                            <button type="submit" className="text-white px-6 py-2.5 bg-gradient-to-r from-gray-700 to-gray-600 hover:from-teal-500 hover:to-emerald-500 transition-all duration-300 font-bold tracking-wide rounded-xl shadow-md">
+                                Filter
+                            </button>
+                        </form>
 
-                            {/* Category Filter */}
+                        <div className="flex items-center w-full md:w-auto mt-2 md:mt-0 relative">
+                            <svg className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            <input
+                                type="text"
+                                id="search"
+                                placeholder="Search car make..."
+                                onChange={search}
+                                className="w-full md:w-64 pl-12 pr-4 py-2.5 bg-gray-800/50 border border-gray-700/50 rounded-xl text-white focus:border-teal-400 focus:ring-1 focus:ring-teal-400 focus:outline-none transition-all"
+                            />
                         </div>
-                    </div>
-                </div >
-                {/*<CarFliter />*/}
-            </div >
-
-            <div className='h-screen w-full flex '>
-                <div className='w-[30%] h-[300px] p-3 m-6  border shadow-lg shadow-lime-500/50 text-center '>
-                    <>
-                        {/*<div className=' flex flex-col  '>
-                            <div className='border border-t-2 p-2'>
-                                <h1 className='font-bold text-lg'>Pick up information</h1>
-                                <h1>FareFly, {data.district}  Road, {data.district} ,
-                                    {formattedDate}  '23, 09:00 AM
-                                </h1>
-                            </div>
-                            <div className='border border-t-2 p-2'>
-                                <h1 className='font-bold text-lg'>Drop off information</h1>
-                                <h1>FareFly, {data.district}  Road,{data.district} ,
-                                    {formattedDat} , 09:00 AM
-                                </h1>
-                            </div>
-                        </div>
-                        <div>
-                            <div className='text-center'>
-                                <h1 className='font-bold text-lg'>Total travel duration</h1>
-                                <h1>{daysDifference} Days 0 Hour 0 Min</h1>
-                            </div>
-                        </div>*/}
-                        <h1>Car Locaion</h1>
-                        {carLocalArea ? carLocalArea && districtVal &&
-                            < Map local={carLocalArea} district={districtVal} />
-                            : districtVal ?
-                                < Map local={carLocalArea} district={districtVal} />
-                                : ''
-
-                        }
-                    </>
-                    <div className='w-[100%] h-[200px] mt-24  border shadow-lg shadow-gray-500/100 rounded-xl'>
-                        <label for="default" class="block mb-2 text-gray-900 dark:text-black font-bold text-lg text-center pt-2 bg-gray-200 ">FILTER CARS</label>
-                        <div className='w-full h-full p-5 '>
-
-                            {/*<label for="small" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select District</label>*/}
-
-                            <select id="small" onChange={(e) => { findDistrict(e.target.value) }} class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-black shadow-lime-500/50  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" >
-
-                                <option>{districtVal}</option>
-                                {district &&
-                                    district.map((value, index) => (
-                                        value !== districtVal && (
-                                            <option key={index} value={value}>
-                                                {value}
-                                            </option>
-                                        )
-
-                                    ))}
-                            </select>
-
-                            {/*<label for="default" class="block mb - 2 text - sm font - medium text - gray - 900 dark:text-white">Default select</label>*/}
-                            <select id="default" onChange={(e) => { findLocalArea(e.target.value) }} class="bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-black shadow-lime-500/50 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option selected>{districtSelect ? `Choose localArea` : ' ------ ------'}</option>
-                                {districtSelect &&
-                                    localArea.map((value, index) => (
-                                        < option value={value}>{value}</option>
-                                    ))
-                                }
-
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div className='w-[70%] h-full '>
-                    {
-                        viewCar ?
-                            <div className=' pt-3 absolute w-[300px] h-[250px] flex justify-center ' onClick={() => { setViewCar('') }}>
-                                < img src={viewCar} alt="" className='w-2/3 h-full hover:border-[0.3rem] border' />
-                            </div>
-
-                            : ''
-
-                    }
-
-
-                    <div className='w-[95%] h-[80%] overflow-y-scroll no-scrollbar '>
-
-                        {loder &&
-                            < div className='w-[99%] h-[500px] flex justify-center items-center p-3 border  hover:w-[100%]  my-4' >
-
-                                <div className='w-[500px] h-[600px] justify-center border-0'>
-                                    <img src={loder} alt="" className='w-2/3 h-full ' />
-
-                                </div>
-                            </div>
-
-                        }
-
-
-                        {cars.length > 0 ? cars.map((value, index) => (
-                            value.status ?
-                                < div key={index} className='w-[99%] h-[150px] flex p-3 border   shadow-lg shadow-lime-500/50 hover:w-[100%]  my-4' >
-                                    <div className='w-[300px] h-full  ' onClick={() => { setViewCar(value.carImage1) }}>
-                                        <img src={value.carImage1 ? value.carImage1 : null} alt="" className='w-2/3 h-full hover:border-[0.3rem] border' />
-
-                                    </div>
-
-                                    <div className='w-full h-full  flex justify-between '>
-                                        <div className='w-[200px] h-full p-3 '>
-                                            <>
-                                                <h1 className='font-bold text-2xl'>{value.carMake}</h1>
-                                                <h1 className='font-bold '>{value.fuelType},{value.transmission},{value.carYear}</h1>
-                                            </>
-                                            {/*<div>
-
-                                                <div class="flex items-center pt-3">
-                                                    <svg class="w-4 h-4 text-yellow-300 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                                                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                                                    </svg>
-                                                    <svg class="w-4 h-4 text-yellow-300 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                                                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                                                    </svg>
-                                                    <svg class="w-4 h-4 text-yellow-300 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                                                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                                                    </svg>
-                                                    <svg class="w-4 h-4 text-yellow-300 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                                                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                                                    </svg>
-                                                    <svg class="w-4 h-4 ms-1 text-gray-300 dark:text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                                                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                                                    </svg>
-                                                </div>
-
-                                            </div>*/}
-
-                                        </div>
-                                        <div className='w-[200px] h-full  ' >
-                                            <h1 className='font-bold text-2xl'>{value.price}₹/day</h1>
-                                            <h1>For 2640 kms without fuel</h1>
-                                            <button type="button" onClick={() => { booking(value._id) }} className="  mt-7 text-gray-900 bg-gradient-to-r from-lime-200 via-lime-400 to-lime-500 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-lime-300
-                                         dark:focus:ring-lime-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Book Now</button>
-
-                                        </div>
-                                    </div>
-
-                                </div>
-                                :
-                                null
-                        ))
-                            : <div>
-                                <Skelton />
-                                <Skelton />
-                                <Skelton />
-                                <Skelton />
-                            </div>
-                        }
                     </div>
                 </div>
             </div>
 
-            <footer>
-                <Footer />
-            </footer>
+            <div className='max-w-screen-xl mx-auto w-full flex flex-col lg:flex-row gap-8 py-8 px-4'>
+                {/* Sidebar */}
+                <div className='w-full lg:w-1/3 space-y-8'>
+                    <div className='bg-gray-800/40 backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]'>
+                        <h2 className='text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400 mb-4 flex items-center'>
+                            <svg className="w-5 h-5 mr-2 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            Location
+                        </h2>
+                        <div className="rounded-xl overflow-hidden border border-gray-700/50 h-[250px] relative">
+                            {carLocalArea ? carLocalArea && districtVal &&
+                                <Map local={carLocalArea} district={districtVal} />
+                                : districtVal ?
+                                <Map local={carLocalArea} district={districtVal} />
+                                : <div className="absolute inset-0 flex items-center justify-center bg-gray-900 text-gray-500">No Location Selected</div>
+                            }
+                        </div>
+                    </div>
 
-        </div >
+                    <div className='bg-gray-800/40 backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] text-center'>
+                        <h2 className='text-xl font-bold text-white mb-6 uppercase tracking-wider text-sm'>Filter Cars By Region</h2>
+                        <div className='space-y-6'>
+                            <select id="small" onChange={(e) => findDistrict(e.target.value)} className="w-full p-3 bg-gray-900/50 border border-gray-700/50 text-gray-300 text-sm rounded-xl focus:border-teal-400 focus:ring-1 focus:ring-teal-400 focus:outline-none transition-all cursor-pointer">
+                                <option>{districtVal || "Select District"}</option>
+                                {district && district.map((value, index) => (
+                                    value !== districtVal && <option key={index} value={value}>{value}</option>
+                                ))}
+                            </select>
+
+                            <select id="default" onChange={(e) => findLocalArea(e.target.value)} className="w-full p-3 bg-gray-900/50 border border-gray-700/50 text-gray-300 text-sm rounded-xl focus:border-teal-400 focus:ring-1 focus:ring-teal-400 focus:outline-none transition-all cursor-pointer">
+                                <option value="Choose localArea">{districtSelect ? `Choose Area` : '--- Select District First ---'}</option>
+                                {districtSelect && localArea.map((value, index) => (
+                                    <option key={index} value={value}>{value}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Main Content */}
+                <div className='w-full lg:w-2/3 relative'>
+                    {/* Fullscreen Image Overlay */}
+                    {viewCar && (
+                        <div className='fixed inset-0 z-[60] flex items-center justify-center bg-black/90 backdrop-blur-sm' onClick={() => setViewCar('')}>
+                            <div className="relative max-w-4xl w-full px-4">
+                                <button className="absolute -top-12 right-4 text-white hover:text-teal-400 font-bold text-xl cursor-pointer">✕ Close</button>
+                                <img src={viewCar} alt="Car View" className='w-full h-auto max-h-[80vh] object-contain rounded-2xl shadow-2xl border border-white/20' />
+                            </div>
+                        </div>
+                    )}
+
+                    <div className='space-y-6'>
+                        {loder && (
+                            <div className='w-full flex justify-center py-20'>
+                                <img src={loder} alt="Loading..." className='w-24' />
+                            </div>
+                        )}
+
+                        {cars.length > 0 ? cars.map((value, index) => (
+                            value.status && (
+                                <div key={index} className='bg-gray-800/40 backdrop-blur-xl border border-white/10 rounded-3xl p-4 sm:p-6 shadow-[0_8px_32px_0_rgba(0,0,0,0.2)] hover:shadow-[0_8px_32px_0_rgba(20,184,166,0.15)] transform hover:-translate-y-1 transition-all duration-300 flex flex-col sm:flex-row gap-6 group'>
+                                    <div className='w-full sm:w-[35%] h-56 sm:h-auto rounded-2xl overflow-hidden cursor-pointer relative' onClick={() => setViewCar(value.carImage1)}>
+                                        <div className="absolute inset-0 bg-teal-500/20 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex items-center justify-center">
+                                            <span className="bg-gray-900/80 text-white font-semibold px-4 py-2 rounded-full cursor-pointer border border-white/20">Expand Image</span>
+                                        </div>
+                                        <img src={value.carImage1 || null} alt={value.carMake} className='w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700' />
+                                    </div>
+
+                                    <div className='w-full sm:w-[65%] flex flex-col justify-between py-2'>
+                                        <div className='flex justify-between items-start'>
+                                            <div>
+                                                <h1 className='font-extrabold text-3xl text-white mb-2'>{value.carMake}</h1>
+                                                <div className='flex flex-wrap gap-2 mb-4'>
+                                                    <span className="px-3 py-1 bg-gray-900 border border-gray-700 rounded-full text-sm text-gray-300 font-medium">{value.fuelType}</span>
+                                                    <span className="px-3 py-1 bg-gray-900 border border-gray-700 rounded-full text-sm text-gray-300 font-medium">{value.transmission}</span>
+                                                    <span className="px-3 py-1 bg-gray-900 border border-gray-700 rounded-full text-sm text-gray-300 font-medium">Year: {value.carYear}</span>
+                                                </div>
+                                            </div>
+                                            <div className="text-right">
+                                                <h1 className='font-extrabold text-3xl text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400'>₹{value.price}</h1>
+                                                <p className="text-gray-500 text-xs uppercase tracking-wider font-semibold mt-1">Per Day</p>
+                                            </div>
+                                        </div>
+
+                                        <div className='mt-6 border-t border-gray-700/50 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4'>
+                                            <p className="text-gray-400 text-sm flex items-center">
+                                                <svg className="w-4 h-4 mr-2 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                                For 2640 kms without fuel
+                                            </p>
+                                            <button type="button" onClick={() => booking(value._id)} className="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-white font-bold tracking-wider rounded-xl shadow-[0_0_15px_rgba(20,184,166,0.3)] hover:shadow-[0_0_25px_rgba(20,184,166,0.5)] transform hover:-translate-y-1 transition-all duration-300">
+                                                Book Now
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )
+                        )) : (
+                            <div>
+                                <Skelton />
+                                <Skelton />
+                                <Skelton />
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            <Footer />
+        </div>
     )
 }
 

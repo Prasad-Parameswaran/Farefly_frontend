@@ -6,39 +6,29 @@ import { bookingCarDeatils, finalbooking, Applycoupon, DatesAvailable } from '..
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import toast from "react-hot-toast";
 
-
-export default function BikeBooking() {
+export default function Booking() {
     const location = useLocation();
     const [bookingData, setBookingData] = useState({})
-    const [grossAmount, setGrossAmount] = useState(Number)
+    const [grossAmount, setGrossAmount] = useState(0)
     const [bookingCar, setBookingCar] = useState([])
-    const [dayCount, setDayCount] = useState(Number)
+    const [dayCount, setDayCount] = useState(0)
     const [discount, setDiscount] = useState(0)
-    const [cgst, setCgst] = useState(Number)
-    const [sgst, setSgst] = useState(Number)
+    const [cgst, setCgst] = useState(0)
+    const [sgst, setSgst] = useState(0)
     const [totalAmount, setTotalAmount] = useState()
     const [selectedMethod, setSelectedMethod] = useState("");
     const [checkOut, setCheckOut] = useState(false)
-    const [loder, setLoder] = useState('')
     const [localAreaName, setLocalAreaName] = useState('')
     const [onlineSelect, setOnlineSelect] = useState(true)
 
-
     const navigate = useNavigate()
-
     const searchParams1 = new URLSearchParams(location.search)
 
     const pickUpDate = searchParams1.get("pickUpDate")
     const dropDate = searchParams1.get("dropDate")
     const carId = searchParams1.get("carId")
     const district = searchParams1.get("district")
-    const value = {
-        pickUpDate: pickUpDate,
-        dropDate: dropDate,
-        carId: carId,
-        district: district,
-    }
-
+    const value = { pickUpDate, dropDate, carId, district }
 
     const dateCount = async (carprize) => {
         const dropDate = new Date(value.dropDate);
@@ -47,7 +37,6 @@ export default function BikeBooking() {
         pickUpDate.setHours(0, 0, 0, 0);
 
         const timeDifference = dropDate - pickUpDate;
-
         const count = Math.round(timeDifference / (1000 * 60 * 60 * 24)) + 1;
         setDayCount(count)
 
@@ -59,17 +48,12 @@ export default function BikeBooking() {
         setGrossAmount(amount);
         setCgst(cgstAmount);
         setSgst(sgstAmount);
+    }
 
-    }
     const datas = {
-        bookingData: bookingData,
-        dayCount: dayCount,
-        cgst: cgst,
-        sgst: sgst,
-        totalAmount: totalAmount,
-        PaymentMethod: selectedMethod,
-        discountAmount: discount,
+        bookingData, dayCount, cgst, sgst, totalAmount, PaymentMethod: selectedMethod, discountAmount: discount,
     }
+
     const providebooking = async () => {
         try {
             datas.localArea = localAreaName
@@ -93,32 +77,23 @@ export default function BikeBooking() {
     }
 
     const handleMethodSelect = async (method) => {
-        if (method == 'wallet') {
-            setCheckOut(false)
-        }
+        if (method === 'wallet') setCheckOut(false)
         setSelectedMethod(method)
-
     }
 
-
-    const CouponApply = async (couponCo) => {
-        const coponData = document.getElementById(couponCo).value
-        const data = {
-            code: coponData,
-            amonut: totalAmount
-        }
+    const CouponApply = async () => {
+        const coponData = document.getElementById('coupon').value
+        if(!coponData) return toast.error("Enter a coupon code")
+        const data = { code: coponData, amonut: totalAmount }
         const response = await Applycoupon(data)
         if (response.data.success) {
             const total = totalAmount - response.data.amount
             setTotalAmount(total)
             setDiscount(response.data.amount)
             toast.success(response.data.message)
-
         } else {
             toast.error(response.data.message)
-
         }
-
     }
 
     const singleCar = async () => {
@@ -134,9 +109,8 @@ export default function BikeBooking() {
     }
 
     function renderUpiPayment() {
-
         const AvailableOrnot = async () => {
-            if (selectedMethod == 'online') {
+            if (selectedMethod === 'online') {
                 const res = await DatesAvailable(datas)
                 if (!res.data.success) {
                     toast.error(res.data.message)
@@ -146,64 +120,39 @@ export default function BikeBooking() {
         }
         AvailableOrnot()
         return (
-            <div className="flex justify-center">
+            <div className="flex justify-center w-full mt-4">
                 {onlineSelect &&
-
-                    < PayPalScriptProvider options={{ "client-id": "Ab6K-WViVZviqKgbf9P0n7Pa9gjagaWrL-jNqOnCaUcbVLGRepbrQxo1MNx5qs5KSo_rnEj59xe3Tes1" }}>
-                        <PayPalButtons
-                            style={{
-                                color: "blue",
-                                shape: "pill",
-                                label: "pay",
-                                height: 40,
-                            }}
-                            createOrder={(data, actions) => {
-                                return actions.order.create({
-                                    purchase_units: [
-                                        {
-                                            amount: {
-                                                value: datas.totalAmount,
-                                            },
-                                        },
-                                    ],
-                                });
-                            }}
-                            onApprove={async (data, actions) => {
-
-                                try {
-                                    const res = await DatesAvailable(datas)
-                                    if (!res.data.success) {
-                                        toast.error(res.data.message)
-                                    } else {
-                                        const res = await actions.order.capture();
-                                        const response = await finalbooking(datas)
-                                        if (response.data.success) {
-                                            navigate("/BookingSuccessfull")
-                                            toast.success('Booking successful');
+                    <PayPalScriptProvider options={{ "client-id": "Ab6K-WViVZviqKgbf9P0n7Pa9gjagaWrL-jNqOnCaUcbVLGRepbrQxo1MNx5qs5KSo_rnEj59xe3Tes1" }}>
+                        <div className="w-full bg-white p-2 rounded-xl">
+                            <PayPalButtons
+                                style={{ color: "blue", shape: "pill", label: "pay", height: 40 }}
+                                createOrder={(data, actions) => {
+                                    return actions.order.create({ purchase_units: [{ amount: { value: datas.totalAmount } }] });
+                                }}
+                                onApprove={async (data, actions) => {
+                                    try {
+                                        const res = await DatesAvailable(datas)
+                                        if (!res.data.success) {
+                                            toast.error(res.data.message)
                                         } else {
-                                            toast.error('something went wrong...');
+                                            await actions.order.capture();
+                                            const response = await finalbooking(datas)
+                                            if (response.data.success) {
+                                                navigate("/BookingSuccessfull")
+                                                toast.success('Booking successful');
+                                            } else {
+                                                toast.error('something went wrong...');
+                                            }
                                         }
-                                    }
-                                } catch (error) {
-
-                                    toast.error('Error capturing payment');
-                                }
-                            }}
-                        />
+                                    } catch (error) { toast.error('Error capturing payment'); }
+                                }}
+                            />
+                        </div>
                     </PayPalScriptProvider>
-
                 }
-            </div >
+            </div>
         );
     }
-    //useEffect(() => {
-    //    const BookingLocation = async () => {
-
-
-    //    }
-    //    BookingLocation()
-
-    //}, [])
 
     useEffect(() => {
         const list = async () => {
@@ -214,230 +163,158 @@ export default function BikeBooking() {
                 toast.error("Error fetching car details");
             }
         }
-
         list();
     }, []);
 
-
-
-
     return (
-        <div >
-            < div className="sticky top-0 z-50" >
+        <div className="bg-gray-900 min-h-screen font-sans text-gray-100 flex flex-col pt-16">
+            <div className="sticky top-0 z-50">
                 <UserNav />
-            </div >
+            </div>
 
-            {!bookingCar.length == 0 &&
-
-                < div className="mt-8 md:mt-2 h-auto lg:h-[700px] flex flex-col lg:flex-row justify-center items-center">
-
-                    <div className="w-full lg:w-[50rem] mt-10 lg:mt-0 h-full lg:ml-14 lg:h-[31rem]  mb-3 lg:mb-0 lg:mr-3 flex flex-col items-center lg:items-center pt-5 custom-shadow">
-                        <h2 className="text-3xl font-bold mb-4 text-center md:text-center">
-                            Booking Summary
-                        </h2>
-
-                        <div className="w-full mt-3 lg:mt-0  lg:w-[45rem] h-auto lg:h-96  mb-3 lg:mb-0 lg:mr-3 flex flex-col lg:flex-row">
-                            {/*{bikesdata.map((value, index) => (*/}
-                            <>
-                                <div
-
-                                    className="w-full lg:w-[40%] md:h-[130%] lg:h-[100%] flex flex-col justify-center items-center shadow-xl bg-lime-200 rounded-lg"
-                                >
-                                    <h1 className="text-2xl font-bold mb-4">
-                                        {bookingCar[0].carMake}
-                                    </h1>
-                                    <img
-                                        src={bookingCar[0].carImage1}
-
-                                        className="w-64 h-40 rounded-lg mb-3 hover:scale-125 transform-gpu transition-transform duration-500 ease-in-out"
-                                        alt=""
-                                    />
-                                    <div className="mt-5 text-2xl flex justify-center text-center  font-mono text-green-800 h-10 w-[50%] bg-white rounded-3xl">
-                                        <span >{bookingCar[0]?.price}₹/Day</span>
-
-                                    </div>
-                                </div>
-
-                                <div className="w-full lg:w-[60%] md:h-[130%] lg:h-[100%] py-6 shadow-xl bg-lime-100 rounded-lg">
-                                    <div className="flex flex-col justify-between pl-2 pr-5">
-                                        <p className="text-lg font-medium flex flex-row justify-between">
-                                            <span>{bookingData.pickUpDate}</span>
-                                            <span>{bookingData.dropDate}</span>
-                                        </p>
-
-                                        {/*<p className="text-lg font-medium flex flex-row justify-between">
-                                            <span>10:00 am</span>
-                                            <span>12:9 pm</span>
-                                        </p>*/}
-
-                                        <p className="text-lg  flex flex-row justify-between">
-                                            <span className="pt-2 font-medium">Pick up point</span>
-                                            <span className="font-serif ">{bookingData.district ? bookingData.district : ''},{bookingCar[0]?.owner.localArea ? bookingCar[0].owner.localArea : ''}</span>
-                                            {/*<select name="" id="" className="w-52 h-10 rounded-md bg-slate-300 ">
-                                            <option className="text-lg font-medium">Select</option>
-                                            <option className="text-lg font-medium">palakkad
-                                            </option>
-                                        </select>*/}
-                                        </p>
-
-                                        <p className="text-lg  flex flex-row justify-between mt-2">
-                                            <span className="pt-1 font-medium">Drop up point</span>
-                                            {/*<select name="" id="" className="w-52 h-10 rounded-md bg-slate-300  ">
-                                            <option className="text-lg font-medium">Select</option>
-                                            <option className="text-lg font-medium">kalpatta
-                                            </option>
-                                        </select>*/}
-                                            <span className="font-serif">{bookingData.district ? bookingData.district : ''},{bookingCar[0]?.owner.localArea ? bookingCar[0].owner.localArea : ''}</span>
-                                        </p>
-                                        <p className="text-lg font-medium flex flex-row justify-between pt-1">
-                                            <span>Total Days</span>
-                                            <span>{dayCount} Days</span>
-                                        </p>
-
-                                        {/*<p className="text-lg font-medium flex flex-row justify-between pt-1">
-                                        <span>Number of Helmet (?)</span>
-                                        <select className="w-12 h-6 font-bold rounded-md bg-slate-300">
-                                            <option className="font-bold">1</option>
-                                            <option>2</option>
-                                        </select>
-                                    </p>*/}
-                                        <p className="text-lg font-medium flex flex-row justify-between">
-                                            <span>Owner Name</span>
-                                            <span>{bookingCar[0].ownerName}</span>
-                                        </p>
-                                        <p className="text-lg font-medium flex flex-row justify-between">
-                                            <span>Plate Number</span>
-                                            <span>{bookingCar[0].carLicenseNumber}</span>
-                                        </p>
-
-                                        <p className="text-lg font-medium flex flex-row justify-between ">
-                                            <span>FuelType </span>
-                                            <span>{bookingCar[0].fuelType}</span>
-                                        </p>
-                                        <p className="text-lg font-medium flex flex-row justify-between ">
-                                            <span>Category </span>
-                                            <span>{bookingCar[0].carCategory}</span>
-                                        </p>
-                                        <p className="text-lg font-medium flex flex-row justify-between ">
-                                            <span>Transmission </span>
-                                            <span>{bookingCar[0].transmission}</span>
-                                        </p>
-                                        <p className="text-lg font-medium flex flex-row justify-between ">
-                                            <span>carYear </span>
-                                            <span>{bookingCar[0].carYear}</span>
-                                        </p>
-                                        <p className="text-lg font-medium flex flex-row justify-between">
-                                            <span>Km limit (?)</span>
-                                            <span>120/km</span>
-                                        </p>
-                                    </div>
-
-                                </div>
-
-                            </>
-                            {/*))}*/}
-
+            {bookingCar.length > 0 && (
+                <div className="flex-grow container mx-auto px-4 py-8 flex flex-col lg:flex-row justify-center gap-8 items-start">
+                    
+                    {/* Booking Details Glass Card */}
+                    <div className="w-full lg:w-3/5 xl:w-[800px] bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] rounded-3xl p-6 md:p-8 flex flex-col mt-4">
+                        <div className="flex items-center mb-6">
+                            <span className="w-8 h-8 rounded-full bg-teal-500/20 text-teal-400 flex items-center justify-center font-bold mr-3 border border-teal-500/30">1</span>
+                            <h2 className="text-2xl font-bold text-white tracking-wide">Booking Summary</h2>
                         </div>
-                        {/*<div className="w-[90%] h-10 bg-slate-100 flex justify-center text-gray-500">
-                            <p>You can pick up the vehicle at the specified location after 09:00 am on the given date and return the vehicle after 09:00 am on the given date. CONTACT: {bookingCar[0].owner?.phone} Or You Can Chat With him</p>
-                        </div>*/}
 
+                        <div className="flex flex-col md:flex-row gap-6">
+                            {/* Car Image Summary */}
+                            <div className="w-full md:w-[40%] flex flex-col items-center bg-gray-800/50 rounded-2xl p-4 border border-gray-700/50">
+                                <h1 className="text-xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400 text-center">
+                                    {bookingCar[0].carMake}
+                                </h1>
+                                <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-4 shadow-[0_0_15px_rgba(20,184,166,0.2)]">
+                                    <img src={bookingCar[0].carImage1} className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-700" alt="Car" />
+                                </div>
+                                <div className="text-xl flex justify-center items-center font-bold text-teal-400 py-2 px-6 bg-gray-900 rounded-full border border-teal-500/30">
+                                    <span>₹{bookingCar[0]?.price} / Day</span>
+                                </div>
+                            </div>
+
+                            {/* Details List */}
+                            <div className="w-full md:w-[60%] bg-gray-800/30 rounded-2xl p-5 border border-gray-700/50 flex flex-col justify-between">
+                                <div className="space-y-3">
+                                    <div className="flex justify-between items-center text-sm md:text-base border-b border-gray-700/50 pb-2">
+                                        <span className="text-gray-400 font-medium">Dates</span>
+                                        <span className="text-white font-semibold">{bookingData.pickUpDate} → {bookingData.dropDate}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-sm md:text-base border-b border-gray-700/50 pb-2">
+                                        <span className="text-gray-400 font-medium">Location</span>
+                                        <span className="text-white font-semibold text-right">{bookingData.district || ''}, {bookingCar[0]?.owner.localArea || ''}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-sm md:text-base border-b border-gray-700/50 pb-2">
+                                        <span className="text-gray-400 font-medium">Duration</span>
+                                        <span className="text-teal-400 font-bold">{dayCount} Days</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-sm md:text-base border-b border-gray-700/50 pb-2">
+                                        <span className="text-gray-400 font-medium">Host Name</span>
+                                        <span className="text-white font-semibold">{bookingCar[0].ownerName}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-sm md:text-base border-b border-gray-700/50 pb-2">
+                                        <span className="text-gray-400 font-medium">License / Category</span>
+                                        <span className="text-white font-semibold">{bookingCar[0].carLicenseNumber} • {bookingCar[0].carCategory}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-sm md:text-base pb-1">
+                                        <span className="text-gray-400 font-medium">Specs</span>
+                                        <span className="text-white font-semibold">{bookingCar[0].fuelType} • {bookingCar[0].transmission} • {bookingCar[0].carYear}</span>
+                                    </div>
+                                </div>
+                                <div className="mt-4 p-3 bg-teal-500/10 rounded-xl border border-teal-500/20 text-center">
+                                    <p className="text-sm text-teal-300 font-medium">Includes 120km daily limit. Extra km charges apply.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    {/* Additional Section */}
-                    <div className="w-full md:w-96 md:h-80 custom-shadow bg-lime-100 flex-col lg:mb-44 justify-between md:ml-4 pb-16 ">
-                        <div>
-                            <p className="font-bold text-2xl text-center">Checkout</p>
-                            <div className="flex justify-between mt-6 pl-4 pr-4">
-                                <p className="font-medium text-lg">Gross Amount</p>
-                                <p>{grossAmount}</p>
+                    {/* Checkout Section */}
+                    <div className="w-full lg:w-2/5 xl:w-[450px] bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] rounded-3xl flex flex-col mt-4 overflow-hidden">
+                        
+                        <div className="p-6 md:p-8">
+                            <div className="flex items-center mb-6">
+                                <span className="w-8 h-8 rounded-full bg-teal-500/20 text-teal-400 flex items-center justify-center font-bold mr-3 border border-teal-500/30">2</span>
+                                <h2 className="text-2xl font-bold text-white tracking-wide">Checkout</h2>
                             </div>
 
-                            <div className="flex justify-between pl-4 pr-4 mt-1">
-                                <p className="font-medium text-lg ">CGST (5%)</p>
-                                <p>₹:{cgst}</p>
-                            </div>
-                            <div className="flex justify-between pl-4 pr-4 mt-1">
-                                <p className="font-medium text-lg">SGST (10%)</p>
-                                <p className="flex">₹:{sgst}</p>
-                            </div>
-                            <div className="flex justify-between pl-4 pr-4 mt-1">
-                                <p className="font-medium text-lg">Discount Amount</p>
-                                <p>{discount}</p>
-                            </div>
-                            {/*<div className="flex justify-between pl-4 pr-4 mt-1">
-                            <p className="font-medium text-lg">Wallet Amount</p>
-                            <p>₹:0</p>
-                        </div>*/}
-                            <div className="flex  pl-4 pr-4 mt-5 w-80 h-16 bg-lime-400 rounded-lg ml-8  justify-between items-center ">
-                                <input className='w-[15rem] ml-2 text-black placeholder:text-black p-1 rounded-md bg-slate-300 h-10  ' id='coupon' type="text" name="code" placeholder=' Enter Coupon Code' />
-                                <button className="font-bold ml-3 mb-1 text-black" onClick={() => { CouponApply('coupon') }} > Apply</button>
-                            </div>
-                        </div>
-                        <div></div>
-                        <div className="flex flex-col items-center mt-6 md:mt-8 w-full md:w-96  lg:h-56 pt-1 custom-shadow bg-lime-200">
-                            <h2 className="text-2xl font-bold mb-4">Choose Payment Method</h2>
-
-                            <div className="flex flex-col items-center space-y-4">
-                                <label className="payment-label font-bold">
-                                    <input
-                                        type="radio"
-                                        value="wallet"
-                                        checked={selectedMethod === "wallet"}
-                                        onChange={() => handleMethodSelect("wallet")}
-                                    />
-                                    Wallet
-                                </label>
-
-                                <label className="payment-label font-bold">
-                                    <input
-                                        type="radio"
-                                        value="online"
-                                        checked={selectedMethod === "online"}
-                                        onChange={() => handleMethodSelect("online")}
-                                    />
-                                    Online
-                                </label>
-                            </div>
-                            <div className="mt-4">
-                                <p className="text-lg font-bold">
-                                    Total Amount: <span className="text-green-800">₹:{totalAmount}</span>
-                                </p>
+                            <div className="space-y-4 mb-6">
+                                <div className="flex justify-between text-gray-300">
+                                    <p className="font-medium">Gross Amount</p>
+                                    <p className="font-semibold text-white">₹{grossAmount}</p>
+                                </div>
+                                <div className="flex justify-between text-gray-400 text-sm">
+                                    <p>CGST (5%)</p>
+                                    <p>₹{cgst}</p>
+                                </div>
+                                <div className="flex justify-between text-gray-400 text-sm">
+                                    <p>SGST (10%)</p>
+                                    <p>₹{sgst}</p>
+                                </div>
+                                {discount > 0 && (
+                                    <div className="flex justify-between text-emerald-400 text-sm font-medium">
+                                        <p>Discount</p>
+                                        <p>-₹{discount}</p>
+                                    </div>
+                                )}
                             </div>
 
-                            {selectedMethod == 'online' ?
-
-                                <button
-                                    className="bg-green-800 text-white px-4 py-2 mt-4 rounded-md"
-
-                                    onClick={() => {
-                                        setCheckOut(true);
-                                    }}
-                                >Make payment </button>
-
-                                :
-                                < button
-                                    className="bg-green-800 text-white px-4 py-2 mt-4 rounded-md"
-                                    // onClick={handlePayment}
-                                    // disabled={!selectedMethod}
-                                    //onClick={bookingsdata}
-                                    onClick={providebooking}  >
-                                    Make Payment
+                            {/* Coupon Input */}
+                            <div className="flex gap-2 mb-8 bg-gray-800/50 p-2 rounded-xl border border-gray-700/50">
+                                <input 
+                                    className='w-full bg-transparent border-none text-white focus:ring-0 px-3 placeholder-gray-500 outline-none' 
+                                    id='coupon' 
+                                    type="text" 
+                                    placeholder='Have a coupon code?' 
+                                />
+                                <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg transition-colors text-sm" onClick={CouponApply}>
+                                    Apply
                                 </button>
-                            }
+                            </div>
 
+                            <div className="border-t border-gray-700/50 pt-6 mb-8">
+                                <div className="flex justify-between items-end mb-6">
+                                    <h3 className="text-lg font-medium text-gray-300">Total Payable</h3>
+                                    <span className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400">₹{totalAmount}</span>
+                                </div>
+                                
+                                <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Payment Method</h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <label className={`flex flex-col items-center justify-center p-4 rounded-xl border cursor-pointer transition-all ${selectedMethod === 'wallet' ? 'bg-teal-500/10 border-teal-500 shadow-[0_0_15px_rgba(20,184,166,0.2)]' : 'bg-gray-800/50 border-gray-700/50 hover:border-gray-500'}`}>
+                                        <input type="radio" value="wallet" className="hidden" checked={selectedMethod === "wallet"} onChange={() => handleMethodSelect("wallet")} />
+                                        <svg className={`w-6 h-6 mb-2 ${selectedMethod === 'wallet' ? 'text-teal-400' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                                        <span className={`font-semibold ${selectedMethod === 'wallet' ? 'text-teal-400' : 'text-gray-300'}`}>Wallet</span>
+                                    </label>
+                                    
+                                    <label className={`flex flex-col items-center justify-center p-4 rounded-xl border cursor-pointer transition-all ${selectedMethod === 'online' ? 'bg-teal-500/10 border-teal-500 shadow-[0_0_15px_rgba(20,184,166,0.2)]' : 'bg-gray-800/50 border-gray-700/50 hover:border-gray-500'}`}>
+                                        <input type="radio" value="online" className="hidden" checked={selectedMethod === "online"} onChange={() => handleMethodSelect("online")} />
+                                        <svg className={`w-6 h-6 mb-2 ${selectedMethod === 'online' ? 'text-teal-400' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                                        <span className={`font-semibold ${selectedMethod === 'online' ? 'text-teal-400' : 'text-gray-300'}`}>Online / UPI</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            {selectedMethod === 'online' ? (
+                                !checkOut ? (
+                                    <button className="w-full py-4 bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-white font-bold text-lg rounded-xl shadow-[0_0_15px_rgba(20,184,166,0.4)] hover:shadow-[0_0_25px_rgba(20,184,166,0.6)] transform hover:-translate-y-1 transition-all duration-300" onClick={() => setCheckOut(true)}>
+                                        Proceed to Pay
+                                    </button>
+                                ) : renderUpiPayment()
+                            ) : (
+                                <button className={`w-full py-4 text-white font-bold text-lg rounded-xl transition-all duration-300 ${!selectedMethod ? 'bg-gray-700 cursor-not-allowed text-gray-400' : 'bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 shadow-[0_0_15px_rgba(20,184,166,0.4)] hover:shadow-[0_0_25px_rgba(20,184,166,0.6)] transform hover:-translate-y-1'}`} onClick={providebooking} disabled={!selectedMethod}>
+                                    Confirm Wallet Payment
+                                </button>
+                            )}
                         </div>
-                        {checkOut && renderUpiPayment()}
-
-
                     </div>
-
                 </div>
-            }
-            <div className="mt-1">
+            )}
+            
+            <div className="mt-auto">
                 <Footer />
             </div>
-        </div >
+        </div>
     );
 }
-

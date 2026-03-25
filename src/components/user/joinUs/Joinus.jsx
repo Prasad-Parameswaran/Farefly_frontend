@@ -1,39 +1,25 @@
 import React, { useRef, useState } from 'react';
 import { partnerSignup } from '../../../apiConfig/axiosConfig/axiosClientConfig'
 import axios from 'axios';
-import toast from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import Navbar from '../navbar/navbar';
 import Footer from '../footer/footer';
 
-
-
-export default function MyForm() {
+export default function Joinus() {
     const upload_preset = 'vytol9u4'
     const cloud_name = 'djbokpgy8'
-    //const [refrsh, setRefresh] = useState(true)
     const [panCard, setPanCard] = useState()
     const [adhar, setAdhar] = useState()
-    const fileInputRef = useRef(null);
+    
     const [validation, setValidation] = useState({
-        name: true,
-        email: true,
-        phone: true,
-        district: true,
-        password: true,
-        conformPassword: true,
-        age: true,
-        localArea: true,
+        name: true, email: true, phone: true, district: true,
+        password: true, conformPassword: true, age: true, localArea: true,
     });
 
     const formRef = useRef({
-        name: React.createRef(),
-        email: React.createRef(),
-        phone: React.createRef(),
-        district: React.createRef(),
-        password: React.createRef(),
-        conformPassword: React.createRef(),
-        age: React.createRef(),
-        localArea: React.createRef(),
+        name: React.createRef(), email: React.createRef(), phone: React.createRef(),
+        district: React.createRef(), password: React.createRef(), conformPassword: React.createRef(),
+        age: React.createRef(), localArea: React.createRef(),
     });
 
     const panCardhandleFile = async (event) => {
@@ -43,16 +29,10 @@ export default function MyForm() {
             formData.append('file', file)
             formData.append('upload_preset', upload_preset)
             const response = await axios.post(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`, formData)
-            if (response?.data?.secure_url) {
-                const data = response.data.secure_url
-
-                setPanCard(data)
-            }
-        }
-        catch (error) {
-            console.log(error)
-        }
+            if (response?.data?.secure_url) setPanCard(response.data.secure_url)
+        } catch (error) { console.log(error) }
     }
+
     const adharHandleFile = async (event) => {
         try {
             const file = event.target.files[0]
@@ -60,18 +40,9 @@ export default function MyForm() {
             formData.append('file', file)
             formData.append('upload_preset', upload_preset)
             const response = await axios.post(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`, formData)
-            if (response?.data?.secure_url) {
-                const data = response.data.secure_url
-                setAdhar(data)
-            }
-        }
-        catch (error) {
-            console.log(error)
-        }
+            if (response?.data?.secure_url) setAdhar(response.data.secure_url)
+        } catch (error) { console.log(error) }
     }
-
-
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -88,150 +59,152 @@ export default function MyForm() {
             panCard: panCard
         };
 
-        // Validate form fields
         const newValidation = {};
         Object.keys(formData).forEach((key) => {
-            if (!key === 'aadhaar' && !key === 'panCard') {
+            if (key !== 'aadhaar' && key !== 'panCard') {
                 newValidation[key] = formData[key].trim() !== '';
             }
-
         });
         setValidation(newValidation);
 
         if (Object.values(newValidation).every((isValid) => isValid)) {
-
             if (!formData.email.includes('@')) {
-
-            } else if (formData.phone.length != 10) {
-                alert('phone is not correct 1 to 10....')
-
-
+                toast.error('Invalid email address')
+            } else if (formData.phone.length !== 10) {
+                toast.error('Phone number must be exactly 10 digits')
             } else if (formData.password !== formData.conformPassword) {
-                alert(' conform passord is not matching  ....')
-
+                toast.error('Passwords do not match')
+            } else if (!panCard || !adhar) {
+                toast.error('Please upload both PAN and Aadhaar documents')
             } else {
-
                 const response = await partnerSignup(formData)
                 if (response?.data?.succes) {
                     toast.success(`${response.data.message}`)
                 } else {
                     toast.error(`${response.data.message}`)
                 }
-
-
             }
+        } else {
+            toast.error('Please fill all required fields')
         }
     };
 
     return (
-        <>
-            <div className='sticky top-0 z-50 '>
-                <Navbar />
-            </div>
-            <div className='bg-black text-white flex flex-col  justify-center items-center w-full h-screen gap-y-6'>
-                <div className='w-full h-11 text-center font-bold text-3xl '>JOIN US NOW...  </div>
-                <div className='w-full  flex  flex-col items-center justify-center'>
+        <div className="bg-gray-900 min-h-screen font-sans flex flex-col pt-16">
+            <Navbar />
+            
+            <div className="flex-grow flex flex-col justify-center items-center py-12 px-4 relative overflow-hidden">
+                {/* Decorative blobs */}
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-teal-500/10 blur-[100px] pointer-events-none"></div>
+                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full bg-blue-500/10 blur-[100px] pointer-events-none"></div>
 
-                    <form onSubmit={handleSubmit} className='w-1/2 p-3 border rounded-lg shadow-md shadow-lime-400  '>
-                        <div className='md:flex w-full'>
-                            <div className='md:w-1/2 h-full'>
-                                <div className='w-full h-20 p-3'>
-                                    <h1>Name</h1>
-                                    <input
-                                        className={`border w-full h-2/3 rounded-lg px-3 text-black ${!validation.name && 'border-red-500 border-2'}`}
-                                        ref={formRef.current.name}
-                                        type="text"
+                <div className="z-10 text-center mb-10 max-w-2xl">
+                    <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400 mb-4 tracking-tight">Become a Partner</h1>
+                    <p className="text-gray-400 text-lg">Join the Farefly network. List your vehicles, earn steady income, and manage everything from a premium dashboard.</p>
+                </div>
+
+                <div className="w-full max-w-4xl z-10">
+                    <form onSubmit={handleSubmit} className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-12 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)]">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+                            
+                            {/* Column 1 */}
+                            <div className="space-y-6">
+                                <div>
+                                    <label className="block text-sm font-semibold mb-2 ml-1 text-gray-300">Full Name</label>
+                                    <input 
+                                        className={`w-full bg-gray-800/50 border transition-all duration-300 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-teal-400/20 ${!validation.name ? 'border-red-400 focus:border-red-400' : 'border-gray-700/50 focus:border-teal-400'}`}
+                                        ref={formRef.current.name} type="text" placeholder="John Doe" 
                                     />
-
                                 </div>
-                                <div className='w-full h-20 p-3'>
-                                    <h1>Email</h1>
-                                    <input className={`border w-full h-2/3 rounded-lg px-3 text-black ${!validation.email && 'border-red-500 border-2'}`}
-                                        ref={formRef.current.email} type="text" />
+                                <div>
+                                    <label className="block text-sm font-semibold mb-2 ml-1 text-gray-300">Email Address</label>
+                                    <input 
+                                        className={`w-full bg-gray-800/50 border transition-all duration-300 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-teal-400/20 ${!validation.email ? 'border-red-400' : 'border-gray-700/50 focus:border-teal-400'}`}
+                                        ref={formRef.current.email} type="email" placeholder="john@example.com"
+                                    />
                                 </div>
-                                <div className='w-full h-20 p-3'>
-                                    <h1>Phone</h1>
-                                    <input className={`border w-full h-2/3 rounded-lg px-3 text-black ${!validation.phone && 'border-red-500 border-2'}`}
-                                        ref={formRef.current.phone} type="number" />
+                                <div>
+                                    <label className="block text-sm font-semibold mb-2 ml-1 text-gray-300">Phone Number</label>
+                                    <input 
+                                        className={`w-full bg-gray-800/50 border transition-all duration-300 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-teal-400/20 ${!validation.phone ? 'border-red-400' : 'border-gray-700/50 focus:border-teal-400'}`}
+                                        ref={formRef.current.phone} type="number" placeholder="Enter 10 digit number"
+                                    />
                                 </div>
-                                <div className='w-full h-20 p-3'>
-                                    <h1>District</h1>
-                                    <input className={`border w-full h-2/3 rounded-lg px-3 text-black ${!validation.district && 'border-red-500 border-2'}`}
-                                        ref={formRef.current.district} type="text" />
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-semibold mb-2 ml-1 text-gray-300">District</label>
+                                        <input 
+                                            className={`w-full bg-gray-800/50 border transition-all duration-300 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-teal-400/20 ${!validation.district ? 'border-red-400' : 'border-gray-700/50 focus:border-teal-400'}`}
+                                            ref={formRef.current.district} type="text" placeholder="City"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-semibold mb-2 ml-1 text-gray-300">Age</label>
+                                        <input 
+                                            className={`w-full bg-gray-800/50 border transition-all duration-300 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-teal-400/20 ${!validation.age ? 'border-red-400' : 'border-gray-700/50 focus:border-teal-400'}`}
+                                            ref={formRef.current.age} type="number" placeholder="e.g. 30"
+                                        />
+                                    </div>
                                 </div>
-                                <div className='w-full h-20 p-3'>
-                                    <h1>PAN Card Image upload</h1>
-                                    <input className={`border w-full h-2/3 rounded-lg px-3 text-black`}
-                                        ref={formRef.current.age} onChange={panCardhandleFile} type="file" name='image' />
+                                <div>
+                                    <label className="block text-sm font-semibold mb-2 ml-1 text-gray-300">PAN Card Upload</label>
+                                    <div className="relative">
+                                        <input 
+                                            className="block w-full text-sm text-gray-400 file:mr-4 file:py-3 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-gray-800 file:text-teal-400 hover:file:bg-gray-700 transition cursor-pointer border border-gray-700/50 rounded-xl bg-gray-800/30"
+                                            onChange={panCardhandleFile} type="file" accept="image/*"
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                            <div className='md:w-1/2 h-full'>
-                                <div className='w-full h-20 p-3 '>
-                                    <h1>Password</h1>
-                                    <input className={`border w-full h-2/3 rounded-lg px-3 text-black ${!validation.password && 'border-red-500 border-2'}`}
-                                        ref={formRef.current.password} type="password" />
+
+                            {/* Column 2 */}
+                            <div className="space-y-6">
+                                <div>
+                                    <label className="block text-sm font-semibold mb-2 ml-1 text-gray-300">Password</label>
+                                    <input 
+                                        className={`w-full bg-gray-800/50 border transition-all duration-300 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-teal-400/20 ${!validation.password ? 'border-red-400' : 'border-gray-700/50 focus:border-teal-400'}`}
+                                        ref={formRef.current.password} type="password" placeholder="Create robust password"
+                                    />
                                 </div>
-                                <div className='w-full h-20 p-3'>
-                                    <h1>RePassword</h1>
-                                    <input className={`border w-full h-2/3 rounded-lg px-3 text-black ${!validation.conformPassword && 'border-red-500 border-2'}`}
-                                        ref={formRef.current.conformPassword} type="password" />
-                                </div >
-                                <div className='w-full h-20 p-3'>
-                                    <h1>Local Area</h1>
-                                    <input className={`border w-full h-2/3 rounded-lg px-3 text-black ${!validation.localArea && 'border-red-500 border-2'}`}
-                                        ref={formRef.current.localArea} type="text" />
+                                <div>
+                                    <label className="block text-sm font-semibold mb-2 ml-1 text-gray-300">Confirm Password</label>
+                                    <input 
+                                        className={`w-full bg-gray-800/50 border transition-all duration-300 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-teal-400/20 ${!validation.conformPassword ? 'border-red-400' : 'border-gray-700/50 focus:border-teal-400'}`}
+                                        ref={formRef.current.conformPassword} type="password" placeholder="Repeat password"
+                                    />
                                 </div>
-                                <div className='w-full h-20 p-3'>
-                                    <h1>Age</h1>
-                                    <input className={`border w-full h-2/3 rounded-lg px-3 text-black ${!validation.age && 'border-red-500 border-2'}`}
-                                        ref={formRef.current.age} type="number" />
+                                <div>
+                                    <label className="block text-sm font-semibold mb-2 ml-1 text-gray-300">Local Area</label>
+                                    <input 
+                                        className={`w-full bg-gray-800/50 border transition-all duration-300 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-teal-400/20 ${!validation.localArea ? 'border-red-400' : 'border-gray-700/50 focus:border-teal-400'}`}
+                                        ref={formRef.current.localArea} type="text" placeholder="Neighborhood"
+                                    />
                                 </div>
-                                <div className='w-full h-20 p-3'>
-                                    <h1>Adhar Image upload</h1>
-                                    <input className={` w-full h-2/3 rounded-lg px-3 text-black border `}
-                                        onChange={adharHandleFile} type="file" name='image' />
+                                <div>
+                                    <label className="block text-sm font-semibold mb-2 ml-1 text-gray-300 mt-28 md:mt-[76px]">Aadhaar Upload</label>
+                                    <div className="relative">
+                                        <input 
+                                            className="block w-full text-sm text-gray-400 file:mr-4 file:py-3 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-gray-800 file:text-teal-400 hover:file:bg-gray-700 transition cursor-pointer border border-gray-700/50 rounded-xl bg-gray-800/30"
+                                            onChange={adharHandleFile} type="file" accept="image/*"
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
                         </div>
-                        <div className='pt-6 w-full flex justify-center'>
-                            <button type="submit" className="text-white border bg-[#050708] hover:bg-[#050708]/80 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:hover:bg-[#050708]/40 dark:focus:ring-gray-600 me-2 mb-2" >
-                                <svg className='pt-1 mr-2' width="35" height="30">
-                                    <rect x="5" y="1" width="18" height="11" fill="transparent" rx="15" stroke="crimson" strokeWidth="2" />
 
-                                    <rect x="1" y="8" width="28" height="8" fill="crimson" rx="5" />
-
-                                    <line x1="7" y1="1" x2="7" y2="8" stroke="crimson" strokeWidth="2" />
-
-                                    <line x1="10.5" y1="1" x2="10.5" y2="8" stroke="crimson" strokeWidth="2" />
-
-                                    <rect x="0" y="11" width="4" height="2" fill="#999" rx="1" />
-
-                                    <rect x="26" y="11" width="4" height="2" fill="#999" rx="1" />
-
-                                    <circle r="3" fill="#222" stroke="white" strokeWidth="2" cx="7" cy="15" />
-                                    <circle r="2" fill="#555" cx="7" cy="15" />
-
-                                    <circle r="3" fill="#222" stroke="white" strokeWidth="2" cx="23" cy="15" />
-                                    <circle r="2" fill="#555" cx="23" cy="15" />
-
-                                    <circle r="2" fill="gold" cx="29" cy="9" />
-
-                                    <circle r="1" fill="orange" cx="4" cy="9" />
-                                </svg>
-                                REGISTER NOW
+                        <div className="mt-12 flex justify-center">
+                            <button type="submit" className="w-full md:w-auto px-10 py-4 bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-white font-bold tracking-wider rounded-xl shadow-[0_0_15px_rgba(20,184,166,0.3)] hover:shadow-[0_0_25px_rgba(20,184,166,0.5)] transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center">
+                                <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                SUBMIT APPLICATION
                             </button>
-
                         </div>
                     </form>
-
-
-                </div >
-
-            </div >
-            <div>
-                <Footer />
+                </div>
             </div>
-        </>
+            
+            <Toaster position="top-center" toastOptions={{ style: { background: '#333', color: '#fff', borderRadius: '10px' } }} />
+            <Footer />
+        </div>
     )
 }
