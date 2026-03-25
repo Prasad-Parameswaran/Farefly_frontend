@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { userList, userStatus } from '../../../apiConfig/axiosConfig/axiosAdminConfig'
 import Swal from 'sweetalert2'
+import toast from 'react-hot-toast'
 
 
 //import img from '../../../assets/car1.avif'
@@ -59,6 +60,7 @@ function UserLists() {
             try {
                 const res = await userStatus(id);
                 setUsers(res.data.data);
+                toast.success(res.data.message || 'Action successful');
             } catch (error) {
                 console.error('An error occurred:', error.message);
             }

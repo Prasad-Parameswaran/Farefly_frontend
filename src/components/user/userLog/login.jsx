@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { clientLogin, varifyOtp, forgotPass, newPassword } from '../../../apiConfig/axiosConfig/axiosClientConfig';
 import carImg from '../../../assets/Rental Car Logo Template Design Vector.jpeg';
 import { useNavigate } from 'react-router-dom';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { UserLG } from '../../../redux/slices/userSlice';
 import OtpInput from "react18-input-otp";

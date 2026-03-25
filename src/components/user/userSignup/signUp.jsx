@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import img from '../../../assets/Premium Vector _ Rental car deal logo template design vector.jpeg'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 const SignUp = () => {
     const [firstName, setFirstName] = useState('');
@@ -127,7 +127,7 @@ const SignUp = () => {
                     <button className='w-full my-4 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-white font-bold tracking-wide rounded-xl shadow-[0_0_15px_rgba(20,184,166,0.3)] hover:shadow-[0_0_25px_rgba(20,184,166,0.5)] transform hover:-translate-y-1 transition-all duration-300' onClick={handleSubmit}>
                         CREATE ACCOUNT
                     </button>
-                    <Toaster position="top-center" toastOptions={{ style: { background: '#333', color: '#fff', borderRadius: '10px' } }} />
+
                     <div className='flex justify-center text-gray-400 mt-6 pt-4 border-t border-gray-700/50 text-sm'>
                         <span>Already have an account? <a onClick={() => { navigate('/login') }} className='cursor-pointer text-teal-400 hover:text-teal-300 font-semibold hover:underline transition-all'>Sign in</a></span>
                     </div>
