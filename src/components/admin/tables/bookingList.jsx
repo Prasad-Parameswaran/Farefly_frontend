@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 //import { userList, userStatus } from '../../apiConfig/axiosConfig/axiosAdminConfig'
 import { bookings } from '../../../apiConfig/axiosConfig/axiosAdminConfig'
+import { toast } from 'react-toastify'
 //import PartnerChat from './partnerChat'
 
 

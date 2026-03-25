@@ -62,12 +62,13 @@ export default function Booking() {
                 toast.error(res.data.message)
             } else {
                 const response = await finalbooking(datas)
-                if (response.data.success || response.data.wallet) {
-                    toast.success(response.data.message || "Booking Started");
+                if (response.data.wallet) {
+                    toast.success("Booking Started");
                     navigate("/BookingSuccessfull");
-                } else {
-                    const errorMsg = response.data.message || response.data.notamount || response.data.messages || "Booking failed";
-                    toast.error(errorMsg);
+                } else if (response.data.notamount) {
+                    toast.error(response.data.notamount);
+                } else if (response.data.messages) {
+                    toast.error(response.data.messages);
                 }
             }
         } catch (error) {
