@@ -46,7 +46,7 @@ function Otp() {
         if (Object.keys(otpValidation).length > 0) {
             return;
         }
-        await axios.post('http://localhost:4000/otpVarify', { user, Userotp, otp }).then((response) => {
+        await axios.post(`${process.env.REACT_APP_API_BASE_URL}/otpVarify`, { user, Userotp, otp }).then((response) => {
             if (response.data.success) {
                 navigate('/');
             } else {

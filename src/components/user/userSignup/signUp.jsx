@@ -32,7 +32,7 @@ const SignUp = () => {
             const userDetails = { firstName, lastName, phone, email, password, repassword };
             console.log('Attempting signup with userDetails:', userDetails);
 
-            await axios.post('http://localhost:4000/signup', { email, phone }).then((response) => {
+            await axios.post(`${process.env.REACT_APP_API_BASE_URL}/signup`, { email, phone }).then((response) => {
                 console.log('Signup response:', response);
                 if (response.data.success) {
                     navigate('/otp', { state: { userDetails: userDetails, otp: response.data.otp } })
