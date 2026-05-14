@@ -247,8 +247,8 @@ function CarsList() {
             <div className='sticky top-[72px] z-40 bg-gray-900/80 backdrop-blur-md border-b border-gray-700/50 shadow-lg px-4 py-4'>
                 <div className="max-w-screen-xl mx-auto">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                        <form onSubmit={dateFilter} className="flex flex-wrap items-center gap-4 w-full md:w-auto">
-                            <div className="flex items-center bg-gray-800/50 border border-gray-700/50 rounded-xl px-4 py-2 hover:border-teal-500/50 transition-colors">
+                        <form onSubmit={dateFilter} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full md:w-auto">
+                            <div className="flex items-center justify-between sm:justify-start bg-gray-800/50 border border-gray-700/50 rounded-xl px-4 py-2 hover:border-teal-500/50 transition-colors w-full sm:w-auto">
                                 <label htmlFor="pickUpDate" className="text-gray-400 text-sm font-semibold mr-3">START</label>
                                 <input
                                     type="date"
@@ -256,10 +256,10 @@ function CarsList() {
                                     defaultValue={start}
                                     name='pickUpDate'
                                     min={new Date().toISOString().split("T")[0]}
-                                    className="bg-transparent text-white focus:outline-none focus:ring-0 text-sm"
+                                    className="bg-transparent text-white focus:outline-none focus:ring-0 text-sm w-full text-right sm:text-left"
                                 />
                             </div>
-                            <div className="flex items-center bg-gray-800/50 border border-gray-700/50 rounded-xl px-4 py-2 hover:border-teal-500/50 transition-colors">
+                            <div className="flex items-center justify-between sm:justify-start bg-gray-800/50 border border-gray-700/50 rounded-xl px-4 py-2 hover:border-teal-500/50 transition-colors w-full sm:w-auto">
                                 <label htmlFor="dropDate" className="text-gray-400 text-sm font-semibold mr-3">END</label>
                                 <input
                                     type="date"
@@ -267,10 +267,10 @@ function CarsList() {
                                     name='dropDate'
                                     defaultValue={end}
                                     min={new Date().toISOString().split("T")[0]}
-                                    className="bg-transparent text-white focus:outline-none focus:ring-0 text-sm"
+                                    className="bg-transparent text-white focus:outline-none focus:ring-0 text-sm w-full text-right sm:text-left"
                                 />
                             </div>
-                            <button type="submit" className="text-white px-6 py-2.5 bg-gradient-to-r from-gray-700 to-gray-600 hover:from-teal-500 hover:to-emerald-500 transition-all duration-300 font-bold tracking-wide rounded-xl shadow-md">
+                            <button type="submit" className="text-white px-6 py-2.5 bg-gradient-to-r from-gray-700 to-gray-600 hover:from-teal-500 hover:to-emerald-500 transition-all duration-300 font-bold tracking-wide rounded-xl shadow-md w-full sm:w-auto">
                                 Filter
                             </button>
                         </form>

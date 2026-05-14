@@ -80,7 +80,7 @@ function Home() {
             <Navbar />
 
             {/* Hero Section */}
-            <div className='relative w-full h-[90vh] flex items-center justify-center overflow-hidden mt-16 md:mt-0'>
+            <div className='relative w-full h-auto min-h-screen md:min-h-0 md:h-[90vh] flex items-center justify-center overflow-hidden pt-12 pb-12 md:py-0 mt-16 md:mt-0'>
                 <div className='absolute inset-0'>
                     <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/80 to-transparent z-10"></div>
                     <img src={image} className='w-full h-full object-cover object-center transform scale-105' alt="Premium Cars" />
@@ -90,13 +90,13 @@ function Home() {
                     <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center'>
                         
                         {/* Text Content */}
-                        <div className="pt-20 md:pt-0">
-                            <h1 className='text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 font-extrabold text-5xl md:text-6xl drop-shadow-lg mb-6 leading-tight'>
+                        <div className="pt-4 md:pt-0 text-center md:text-left">
+                            <h1 className='text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 font-extrabold text-4xl md:text-5xl lg:text-6xl drop-shadow-lg mb-4 md:mb-6 leading-tight'>
                                 Premium Car Rentals
                                 <br/>
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400">At Your Fingertips</span>
                             </h1>
-                            <p className='text-gray-300 text-lg md:text-xl leading-relaxed mb-8 max-w-lg'>
+                            <p className='text-gray-300 text-base md:text-lg lg:text-xl leading-relaxed mb-6 md:mb-8 max-w-lg mx-auto md:mx-0'>
                                 Experience the ultimate freedom with our top-tier collection of luxury and practical vehicles. Book instantly, drive comfortably, and enjoy a seamless journey.
                             </p>
                         </div>
@@ -119,7 +119,7 @@ function Home() {
                                         </select>
                                     </div>
                                     
-                                    <div className="w-full grid grid-cols-2 gap-4 mb-8">
+                                    <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
                                         <div>
                                             <label className="block text-gray-300 text-sm font-semibold mb-2 ml-1" htmlFor="start-date">
                                                 Start Date
